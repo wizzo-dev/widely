@@ -1,0 +1,16 @@
+// SETUP
+@import "./setup/variables";
+@import "./setup/mixins";
+
+// BASE
+@import "./base/helpers";
+
+// GENERAL
+@import "./general/general";
+
+// VIEWS
+@import "./views/join_us";
+
+// COMPONENTS
+@import "./components/step1";
+@import "./components/step2";

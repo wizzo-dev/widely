@@ -1,0 +1,38 @@
+$mainColor: #d98372;
+$secColor: #2cd5c4; 
+$grey: rgba(0, 0, 0, 0.3); 
+$mobileWidth: 750px;
+
+:root {
+  // COLORS
+  --clr1: #c0a8f1;
+  --clr2: #93c1ec;
+  --clr3: #c3bece;
+  --clr4: #f4ec96;
+  --clr5: #768eba;
+  --clrGold1: #dfba6c;
+  --clrGold2: #e0bf6e;
+  --clrGold3: #d59a4a;
+  --clrFont1: #fff;
+  --clrFont2: #000;
+  --clrFont3: #104765;
+  --clrSubtitle1: #000;
+  --clrHeader: #fff;
+
+  // GRADIENTS
+  --goldGradient1: linear-gradient(
+    90deg,
+    rgba(250, 215, 131, 1) 0%,
+    rgba(223, 186, 108, 1) 25%,
+    rgba(215, 165, 97, 1) 51%,
+    rgba(250, 215, 131, 1) 81%,
+    rgba(221, 173, 108, 1) 100%
+  );
+
+  // SIZING
+  --headingSize1: 32px;
+  --headingSize2: 26px;
+
+  // BREAKPOINTS
+  --breakMobile: 600px;
+}
