@@ -11,6 +11,13 @@ const app = createApp({
     extends: App,
   }).use(store).use(router)
 
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faTrashAlt, faShoppingCart, faTimes} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faTrashAlt, faShoppingCart, faTimes)
+app.component('FontAwesomeIcon', FontAwesomeIcon)
+
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'

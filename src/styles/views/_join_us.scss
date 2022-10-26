@@ -41,7 +41,7 @@ $mobileWidth: 750px;
 		.small_title{margin-bottom: 0}
 		.flex{display: flex;justify-content: space-between;align-items: center;    position: absolute;left: 30px;right: 30px;bottom: 15px;
 			.total_sub{font-size: 17px;}
-			.deleted_price{margin-right: 15px;color: #ccc;font-weight: 600;}
+			.deleted_price{margin-inline-end: 18px;color: rgb(196, 195, 195);font-weight: 600;}
 			.deleted_price::before{height: 2px;width: 100%;top: 12px}
 			.add_ils::after{right: -12px;top: 4px}
 		}
