@@ -79,6 +79,8 @@
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FifthStep v-if="step === 5" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <SendOtp v-if="step === 7" :phoneNumber="form.phone_number" @success="step = 8" />
+          <ValidateOtpWithId v-if="step === 8" :idCard="form.id_card" :phoneNumber="form.phone_number" />
         </div>
       </div>
     </div>
@@ -95,8 +97,11 @@ import SecondStep from '@/components/SecondStep.vue'
 import ThirdStep from '@/components/ThirdStep.vue'
 import FourthStep from '@/components/FourthStep.vue'
 import FifthStep from '@/components/FifthStep.vue'
+import ValidateOtpWithId from '@/components/OTP/validateWithId.vue'
+import SendOtp from '@/components/OTP/sendOtp.vue'
+
 export default {
-  components: { FirstStep, SecondStep, ThirdStep, FourthStep, FifthStep },
+  components: { FirstStep, SecondStep, ThirdStep, FourthStep, FifthStep,ValidateOtpWithId, SendOtp },
   data() {
     
     return {
