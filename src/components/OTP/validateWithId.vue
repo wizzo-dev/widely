@@ -23,10 +23,7 @@ export default {
   components: { VueCountdown },
   props: {
     
-    activeItem: {
-      required: true,
-      type: Array,
-    },
+    
     phoneNumber: {
       required: true,
       type: Number,
@@ -61,7 +58,7 @@ export default {
       },
         validateOtp(){
 			this.allowCodeSend = false;
-            
+
 			this.api_call({ action: 'api/validate_otp_with_id', data:{ phone:this.phoneNumber ,code: this.otp , id:this.idCard }},(data) => {
 					if(data.data.error && data.data.error != "")
 					{

@@ -16,11 +16,6 @@
 export default {
   components: { },
   props: {
-    
-    activeItem: {
-      required: true,
-      type: Array,
-    },
     phoneNumber: {
       required: true,
       type: Text,
