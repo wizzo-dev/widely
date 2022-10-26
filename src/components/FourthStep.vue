@@ -74,19 +74,22 @@ export default {
 	},
 	openUser() {  
 			this.$emit('showLoader', true);
-			if(this.approve === 0)	this.activate_error(this.words.please_approve);
+			if(this.approve === 0) this.activateError(this.words.please_approve);
 			else {
-				this.$emit('saveData',true);
+				this.$emit('saveData',null, true);
 				
 				if(this.skipPay) 
-					{
-						return this.saveDidsToAccount();
-					}
+				return this.saveDidsToAccount();
 				
 				this.api({ action: 'api/add_account', data: { } }, (data) => {
-					if(data.data.error && data.data.error != "") this.$emit('activateError', data.data.error);
-					else {
-							if(data.data && !this.skipPay) this.$emit('goToStep', this.step + 1);window.scrollTo(0,0);
+					
+					if(data.data.error && data.data.error != "") {
+													
+						this.activateError(data.data.error);
+						return this.$emit('showLoader', false);
+					}
+					else if(data.data && !this.skipPay) {
+						this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
 					}
 				});
 			}
@@ -94,12 +97,13 @@ export default {
 			
 	},
 	saveDidsToAccount() {
-			this.$emit('saveData',true);
+			this.$emit('saveData',null, true);
 			this.api({ action: 'api/save_dids_to_account'}, (data)=>{
 			if(data.data.error && data.data.error != "") {
-						this.$emit('activateError', data.data.error);
-						this.show_loader = false;
+			this.activateError(data.data.error);
+			this.$emit('showLoader', false);
 			} else document.location = '/activate';
+
 			this.$emit('saveData',false);
 			})
 	},
