@@ -163,7 +163,6 @@ const globalMixin = {
                 document.location.reload();
               }
                  func(response.data);
-                 //console.log(response.body);
              }, response => { 
                if (!this.isNull(failFunc)) failFunc(response);
                //else func(false);

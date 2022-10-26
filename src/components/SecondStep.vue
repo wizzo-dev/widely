@@ -56,6 +56,13 @@ export default {
       required: true,
       type: Array,
     },
+    parentForm: {
+      required: true,
+      type: Object,
+    },
+  },
+  mounted() {
+	if (this.parentForm && Object.entries(this.parentForm).length) this.form = {...this.parentForm}
   },
   computed: {
     words() {

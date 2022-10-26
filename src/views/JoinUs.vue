@@ -75,10 +75,12 @@
         <div id="form">
           <routerLink to="/" class="clean_link go_back_home" v-html="$store.state.words.go_back_home"></routerLink>
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
-          <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FifthStep v-if="step === 5" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <SendOtp v-if="step === 7" :phoneNumber="form.phone_number" @success="step = 8" />
+          <ValidateOtpWithId v-if="step === 8" :idCard="form.id_card" :phoneNumber="form.phone_number" @success="step = 4;otpValidate = true" />
         </div>
       </div>
     </div>
@@ -95,12 +97,16 @@ import SecondStep from '@/components/SecondStep.vue'
 import ThirdStep from '@/components/ThirdStep.vue'
 import FourthStep from '@/components/FourthStep.vue'
 import FifthStep from '@/components/FifthStep.vue'
+import ValidateOtpWithId from '@/components/OTP/validateWithId.vue'
+import SendOtp from '@/components/OTP/sendOtp.vue'
+
 export default {
-  components: { FirstStep, SecondStep, ThirdStep, FourthStep, FifthStep },
+  components: { FirstStep, SecondStep, ThirdStep, FourthStep, FifthStep,ValidateOtpWithId, SendOtp },
   data() {
     
     return {
       selectedIds: '',
+      otpValidate:false,
       activeNumber: 0,
       step: 1,
       deletedPrice: 0,
@@ -128,7 +134,6 @@ export default {
     /* eslint-disable */
     loadData(activeNumber = false, dontAdd = false, dontRefresh = false) {
       this.api({ action: 'cart/get', method: 'post' }, (data) => {
-        console.log(data.data);
         if (this.loaded && !dontAdd) {
           this.numbersValidation()
         }
@@ -271,10 +276,9 @@ export default {
            return this.showLoader = false
 
           } else {
-            if (data.data.data.exists && !this.otp_validate) {
+            if (data.data.data.exists && !this.otpValidate) {
               this.api({ action: 'cart/add_cart_data', data: formData })
               this.showLoader = false
-
               this.$swal
                 .fire({
                   icon: 'info',
@@ -292,7 +296,7 @@ export default {
                     this.step = 2
                   }
                 })
-            } else if (data.data.data.exists && this.otp_validate) {
+            } else if (data.data.data.exists && this.otpValidate) {
 
               this.step = 4
               this.showLoader = false
