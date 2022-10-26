@@ -63,8 +63,8 @@
   
       loadData(){
             this.showLoader = true;   
-            this.api({ action: 'api/get_open_order_numbers', data: {}  , onComplete: (data) => {
-            if(data.data.error && data.data.error != "")
+            this.api({ action: 'api/get_open_order_numbers'}, (data) => {
+              if(data.data.error && data.data.error != "")
               {
                 this.activateError(data.data.error);
               }
@@ -90,7 +90,7 @@
                 }
               }
       
-            }});
+            });
                   
             this.loadInfo();
           
