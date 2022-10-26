@@ -21,6 +21,7 @@
           </ul>
         </div>
 
+
         <div id="cart" :class="cartOpen ? 'open' : 'close'">
           <template v-if="isMobile()">
             <div class="cart" @click="cartOpen = true">
@@ -75,6 +76,7 @@
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <FifthStep v-if="step === 5" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
         </div>
       </div>
     </div>
@@ -90,9 +92,11 @@ import FirstStep from '@/components/FirstStep.vue'
 import SecondStep from '@/components/SecondStep.vue'
 import ThirdStep from '@/components/ThirdStep.vue'
 import FourthStep from '@/components/FourthStep.vue'
+import FifthStep from '@/components/FifthStep.vue'
 export default {
-  components: { FirstStep, SecondStep, ThirdStep, FourthStep },
+  components: { FirstStep, SecondStep, ThirdStep, FourthStep, FifthStep },
   data() {
+    
     return {
       selectedIds: '',
       activeNumber: 0,
@@ -214,6 +218,8 @@ export default {
     },
 
     saveCartData(formData, dontMoveStep = false) {
+      
+
       //active alert if didnt choose city
       if (this.step == 3 && formData.city <= 0) {
         this.activateError(this.words.choose_city)
@@ -226,21 +232,34 @@ export default {
         return false
       }
 
-      this.showLoader = true
+      
+      if(formData) {
+        if (formData.phone_number) {
+            let phoneNumber = formData.phone_number + '';
+            if (phoneNumber[0] !== '0') {
+              phoneNumber[0] = '0';
+              formData.phone_number = +phoneNumber;
+            }
+        }
+        this.form = {...this.form, ...formData};
+      }
+      this.showLoader = true;
 
       this.api(
         {
           action: 'api/identification_number_exists',
-          data: { id_card: formData.id_card },
+          data: { id_card:this.form.id_card },
         },
         (data) => {
           if (data.data.error && data.data.error != '') {
             this.activateError(data.data.error)
-            this.showLoader = false
+           return this.showLoader = false
+
           } else {
             if (data.data.data.exists && !this.otp_validate) {
               this.api({ action: 'cart/add_cart_data', data: formData })
               this.showLoader = false
+
               this.$swal
                 .fire({
                   icon: 'info',
@@ -259,9 +278,11 @@ export default {
                   }
                 })
             } else if (data.data.data.exists && this.otp_validate) {
+
               this.step = 4
               this.showLoader = false
             } else {
+
               this.api(
                 { action: 'cart/add_cart_data', data: formData },
                 () => {

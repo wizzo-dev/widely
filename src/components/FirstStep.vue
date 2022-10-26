@@ -180,8 +180,8 @@ export default {
      setActiveNumberById(id){
      this.$emit('setActiveNumber', id);
     },
-    numbersValidation(){
-    this.$emit('numbersValidation')
+    numbersValidation(next){
+    this.$emit('numbersValidation', next)
     },
     toggleProduct(num,prod) {
     this.$emit('toggleProd', num,prod)

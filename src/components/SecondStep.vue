@@ -25,7 +25,7 @@
 								<label for="email" v-html="words.my_email_is"></label>
 							</div>
 							<div class="form-item">
-								<input inputmode="numeric" type="number" id="phone" v-model="form.phone_number" autocomplete="off" required/>
+								<input inputmode="numeric"  type="tel" id="phone" v-model="form.phone_number" autocomplete="off" required/>
 								<label for="phone" v-html="words.my_number_is"></label>
 							</div>
 							<div class="btn_wrapper">
