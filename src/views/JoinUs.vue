@@ -75,7 +75,7 @@
         <div id="form">
           <routerLink to="/" class="clean_link go_back_home" v-html="$store.state.words.go_back_home"></routerLink>
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
-          <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FifthStep v-if="step === 5" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
@@ -133,7 +133,6 @@ export default {
     /* eslint-disable */
     loadData(activeNumber = false, dontAdd = false, dontRefresh = false) {
       this.api({ action: 'cart/get', method: 'post' }, (data) => {
-        console.log(data.data);
         if (this.loaded && !dontAdd) {
           this.numbersValidation()
         }
