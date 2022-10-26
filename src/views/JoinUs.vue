@@ -15,7 +15,7 @@
           <div v-if="isMobile()" :style="'width:' + step * 20 + '%'" id="border"></div>
           <div v-else id="border" :style="'height:' + step * 20 + '%'"></div>
           <ul>
-            <li v-for="num in numberOfSteps" :class="'step ' + (step >= num ? 'active' : '')" :key="num" @click="step = num">
+            <li v-for="num in numberOfSteps" :class="'step ' + (step >= num ? 'active' : '')" :key="num" >
               <div class="checkbox"></div>
             </li>
           </ul>
@@ -25,10 +25,11 @@
         <div id="cart" :class="cartOpen ? 'open' : 'close'">
           <template v-if="isMobile()">
             <div class="cart" @click="cartOpen = true">
-              <i class="far fa-shopping-cart"></i>
+              <font-awesome-icon icon="fa fa-shopping-cart" />
+
             </div>
             <div class="close" @click="cartOpen = !cartOpen">
-              <i class="far fa-times"></i>
+              <font-awesome-icon icon="fa fa-times" />
             </div>
           </template>
           <div class="cart_title bold hide_on_close">
@@ -38,14 +39,14 @@
             <template v-if="numbersInfo">
               <li v-for="num in numbersInfo" :key="num.id" class="active">
                 <div class="options">
-                  <div v-if="numbersInfo.length > 1" class="trash" @click="remove_number(num)">
-                    <i class="far fa-trash-alt"></i>
+                  <div v-if="numbersInfo.length > 1" class="trash" @click="removeNumber(num)">
+                      <font-awesome-icon icon="fa fa-trash-alt" />
                   </div>
                   <div v-else class="trash"></div>
                   <div v-if="num.phone_number.length > 3">
                     <div class="small_title bold" v-if="num.phone_number.length < 12">
                       {{ num.phone_number }}
-                      <a class="change_number semi_bold" @click="change_number(num)" >{{ words.change_number }}</a>
+                      <a class="change_number semi_bold" @click="changeNumber(num)" >{{ words.change_number }}</a>
                     </div>
                     <div class="small_title">
                       {{ !num.has_number ? 'מספר חדש' : 'מספר קיים' }}
@@ -61,18 +62,19 @@
           <div class="flex hide_on_close">
             <div class="small_title bold">{{ words.total }}</div>
             <div class="total_sub main_color bold">
-              <span class="add_ils">{{ total }}</span>
-              <span class="deletedPrice add_ils" v-if="total < deletedPrice">{{
+              <span class="deleted_price add_ils" v-if="total < deletedPrice">{{
                 deletedPrice
               }}</span>
+              <span class="add_ils">{{ total }}</span>
               {{ words.to_month }}
             </div>
+            
           </div>
         </div>
 
         <div id="form">
-          <routerLink to="/" class="clean_link" v-html="$store.state.words.go_back_home"></routerLink>
-          <FirstStep v-if="step === 1" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
+          <routerLink to="/" class="clean_link go_back_home" v-html="$store.state.words.go_back_home"></routerLink>
+          <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
@@ -123,11 +125,15 @@ export default {
     },
   },
   methods: {
+    /* eslint-disable */
     loadData(activeNumber = false, dontAdd = false, dontRefresh = false) {
       this.api({ action: 'cart/get', method: 'post' }, (data) => {
-        if (this.loaded && !dontAdd) this.numbersValidation()
-        if (data.data.items === undefined || data.data.items.length == 0)
-          this.addNewNumber()
+        console.log(data.data);
+        if (this.loaded && !dontAdd) {
+          this.numbersValidation()
+        }
+        if (data.data.items === undefined || data.data.items.length == 0) this.addNewNumber()
+        
         else {
           let numbers = this.parseNumbers(data.data.items)
           this.numbersInfo = numbers
@@ -140,7 +146,7 @@ export default {
         this.form = data.data.order_data
         this.total = data.data.total_price
         this.deletedPrice = data.data.total_price_deleted
-        this.loaded = true
+        // this.loaded = true
       })
     },
 
@@ -153,9 +159,11 @@ export default {
     },
 
     toggleProd(num,prod) {
-    this.api({ action: 'cart/add_item', data:{ item_id:prod.id ,id:num.id } } , (data) => {
+    this.api({ action: 'cart/add_item', data:{ item_id:prod.id ,id:num.id } } , async (data) => {
         if(data.data?.error && data.data?.error != "") this.activateError(data.data.error)
-        else this.loadData(false,false,num.id)
+        else {
+          this.numbersValidation(false,num.id);
+        }
     })
 	},
 
@@ -165,6 +173,12 @@ export default {
           this.activateError(data.data.error)
         else this.numbers = data.data
       })
+    },
+
+    removeNumber(num) {
+      this.api({ action: 'cart/remove_number', data: { phone_number: num.phone_number, id:num.id } }, ()=>{
+					this.loadData(false,true);
+      });
     },
 
     addNewNumber() {
@@ -181,7 +195,7 @@ export default {
       )
     },
 
-    numbersValidation(next = false) {
+    numbersValidation(next = false,numberId = false) {
       for (let i in this.numbersInfo) {
         if (this.numbersInfo[i].phone_number.length < 10) {
           this.numbersInfo[i].alert = true
@@ -207,6 +221,9 @@ export default {
               this.step++
               window.scrollTo(0, 0)
             }
+            if (numberId !== false) {
+              this.loadData(false,false,numberId)
+            }
           }
         }
       )
@@ -218,8 +235,6 @@ export default {
     },
 
     saveCartData(formData, dontMoveStep = false) {
-      
-
       //active alert if didnt choose city
       if (this.step == 3 && formData.city <= 0) {
         this.activateError(this.words.choose_city)

@@ -14,7 +14,7 @@
           class="trash"
           @click="removeNumber(activeItem)"
         >
-          <i class="far fa-trash-alt"></i>
+          <font-awesome-icon icon="fa fa-trash-alt" />
         </div>
         <div class="pack_num" v-html="activeIndex"></div>
         <div class="options">
@@ -183,12 +183,12 @@ export default {
     numbersValidation(next){
     this.$emit('numbersValidation', next)
     },
-    toggleProduct(num,prod) {
-    this.$emit('toggleProd', num,prod)
+    toggleProduct(num, prod) {
+    this.$emit('toggleProd', num, prod)
 	},
     removeNumber(num) {
 	this.api({ action: 'cart/remove_number', data: { phone_number: num.phone_number, id:num.id }} , () => {
-		this.loadData(false,true);
+    this.$emit('loadData', false,true);
 	});		
 	},
 	changeHasNum(num,status) {

@@ -3,7 +3,7 @@ $secColor: #2cd5c4;
 $grey: rgba(0, 0, 0, 0.3); 
 $mobileWidth: 750px;
 .select2{width: 100% !important;}
-
+.trash{cursor: pointer;}
 .vm--container{direction: ltr;z-index: 99999}
 .vm--modal{padding: 30px 30px 70px;text-align: center;height: auto!important;position: relative}
 .vm--modal .btn{width: fit-content;padding: 0px 40px;font-size: 20px;font-weight: 600;position: absolute;bottom: 20px;left: 0;right: 0;margin: 0 auto}
@@ -63,7 +63,6 @@ a { cursor:pointer;}
     filter: gray; /* IE6-9 */
     -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
 }
-
 
 .hr { clear:both; border-bottom:1px solid #CCC; height:1px; background:#E6E6E6; margin:20px 0px; }
 input.error, .ms-parent.error { box-shadow:0px 0px 0px 1px #FF1D21;}
@@ -239,7 +238,7 @@ input::-webkit-inner-spin-button {
 		}
 		#add_plan_footer{
 			&{ padding: 0 15px 15px;flex-direction: column;}
-			.deleted_price::before{top: 19px}
+			.deleted_price::before{top: 19px;}
 			.title{margin: 0;    font-size: 27px !important;text-align: center}
 		}
 		#user_area_wrapper {
@@ -250,22 +249,23 @@ input::-webkit-inner-spin-button {
 			.image{flex: auto;height: 170px;background-position: center}
 		}
 	}
-	footer 
-	{
+	footer {
 		#footer_logo{left: 0;margin: 0 auto;right: 0;bottom: 45px;height: 70px;width: 130px;}
 		ul{    width: 90%;gap: 10px 0px;}
 		#copy_rights{width: 95%;gap:5px;font-size: 14px;}
 	}
-	.joinUs{ 
+	.joinUs { 
 		#menu_btn{top: 10px}
 	}
-	#app{
+	#app {
 		#back_image #white_logo{left: 0;right: 0 ;margin: 0 auto;top:  10px;width: 160px;position: fixed}
 		#cart.close .close{left: 9px}
 		.go_back_home{margin-bottom: 20px}
+		
 		&{padding: 110px  0px 0;min-height: 0}
 		#cart{left: 10px;bottom: unset;min-height: unset; top: 10px;transform:translate(0%, 0%);box-shadow: 0 2px 30px 0 rgba(0 ,0 ,0 , 0.20);min-width: 250px;position: fixed;
 			.cart{font-size: 24px}
+			
 		}
 		#back_image{width: 100%;right: 0}
 		.wrapper {
