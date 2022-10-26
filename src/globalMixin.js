@@ -56,6 +56,16 @@ const globalMixin = {
         let cookieValue = (str == '' ? '0' : '1');
         document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate + ";domain=.nadlancenter;path=/";
       },
+      activateInfo(text) {
+        this.$swal({
+          icon:  'info',
+          title: text,
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: 'הפעלה ממספר אחר',
+          denyButtonText: 'חזרה לדף הבית',
+        })
+      },
 
       activateError(text) {
         this.$swal({
