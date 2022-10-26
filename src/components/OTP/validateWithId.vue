@@ -1,7 +1,7 @@
 <template>
     <div class="form">
         <h2 class="title" v-html="$store.state.words.insert_otp"></h2>
-        <form class="form_steps" @submit.prevent="validate_otp()">
+        <form class="form_steps" @submit.prevent="validateOtp()">
             <div class="form-item">
                 <input input-mode="numeric" type="number" id="otp" v-model="otp" autocomplete="off" required/>
                 <label for="otp" v-html="words.my_otp_is"></label>
@@ -23,10 +23,7 @@ export default {
   components: { VueCountdown },
   props: {
     
-    activeItem: {
-      required: true,
-      type: Array,
-    },
+    
     phoneNumber: {
       required: true,
       type: Number,
@@ -61,11 +58,11 @@ export default {
       },
         validateOtp(){
 			this.allowCodeSend = false;
-            
+
 			this.api_call({ action: 'api/validate_otp_with_id', data:{ phone:this.phoneNumber ,code: this.otp , id:this.idCard }},(data) => {
 					if(data.data.error && data.data.error != "")
 					{
-						this.activate_error(data.data.error);
+						this.activateError(data.data.error);
 					}
 					else{
 						this.$emit("success");
