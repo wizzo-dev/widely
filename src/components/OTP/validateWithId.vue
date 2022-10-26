@@ -59,7 +59,7 @@ export default {
         validateOtp(){
 			this.allowCodeSend = false;
 
-			this.api_call({ action: 'api/validate_otp_with_id', data:{ phone:this.phoneNumber ,code: this.otp , id:this.idCard }},(data) => {
+			this.api({ action: 'api/validate_otp_with_id', data:{ phone:this.phoneNumber ,code: this.otp , id:this.idCard }},(data) => {
 					if(data.data.error && data.data.error != "")
 					{
 						this.activateError(data.data.error);
