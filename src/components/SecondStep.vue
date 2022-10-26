@@ -29,7 +29,7 @@
 								<label for="phone" v-html="words.my_number_is"></label>
 							</div>
 							<div class="btn_wrapper">
-								<a class="go_back under_line" @click="return_step()" tabindex="0" v-html="words.return_step"></a>
+								<a class="go_back under_line" @click="$emit('returnStep')" tabindex="0" v-html="words.return_step"></a>
 								<input type="submit" class="btn" :value="words.procced" />
 							</div>
 						</form>

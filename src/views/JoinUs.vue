@@ -71,9 +71,10 @@
 
         <div id="form">
           <routerLink to="/" class="clean_link" v-html="$store.state.words.go_back_home"></routerLink>
-          <FirstStep v-if="step === 1" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
-          <SecondStep v-if="step === 2" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
-          <ThirdStep v-if="step === 3" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <FirstStep v-if="step === 1" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
+          <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
         </div>
       </div>
     </div>
@@ -88,13 +89,14 @@
 import FirstStep from '@/components/FirstStep.vue'
 import SecondStep from '@/components/SecondStep.vue'
 import ThirdStep from '@/components/ThirdStep.vue'
+import FourthStep from '@/components/FourthStep.vue'
 export default {
-  components: { FirstStep, SecondStep, ThirdStep },
+  components: { FirstStep, SecondStep, ThirdStep, FourthStep },
   data() {
     return {
       selectedIds: '',
       activeNumber: 0,
-      step: 3,
+      step: 1,
       deletedPrice: 0,
       showLoader: false,
       loaded: false,
@@ -104,6 +106,7 @@ export default {
       form: {},
       numbers: [],
       skipPay: false,
+      numberOfSteps: 5
     }
   },
   mounted() {
@@ -113,9 +116,6 @@ export default {
   computed: {
     words() {
       return this.$store.state.words
-    },
-    numberOfSteps() {
-      return 5
     },
   },
   methods: {
@@ -138,6 +138,14 @@ export default {
         this.deletedPrice = data.data.total_price_deleted
         this.loaded = true
       })
+    },
+
+    toggleLoader(isLoaderShow){
+      this.showLoader = isLoaderShow;
+    },
+
+    goToStep(step){
+      this.step = step > 0 ? step : 1;
     },
 
     toggleProd(num,prod) {
