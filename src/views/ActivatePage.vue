@@ -21,7 +21,10 @@
             </ul>
           </div>
           <div id="form">
-            <activateNumber v-if="step === 2" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :step="step" :numbers="numbers"  :activeNumber="+activeNumber"/>
+            <activateNumber v-if="step === 1" :step="step" :numbers="numbers"  />
+            <sendOtp v-if="step === 2" :phoneNumber="phoneNumber" @success="successOtpSend"/>
+            <validateOtp v-if="step === 3" :phoneNumber="phoneNumber" @success="validateOtp"/>
+            <activateQr v-if="step === 4"/>
           </div>
         </div>
       </div>
@@ -32,13 +35,18 @@
   </template>
   <script>
   import activateNumber from '@/components/activate/activateNumber.vue'
-
+  import activateQr from '@/components/activate/qrActivation.vue'
+  import sendOtp from '@/components/OTP/sendOtp.vue'
+  import validateOtp from '@/components/OTP/validateOtp.vue'
+ 
+ 
   export default {
-    components: { activateNumber},
+    components: { activateNumber, sendOtp ,validateOtp, activateQr},
     data() {
       return {
-        step: 1,
+        step: 2,
         deletedPrice: 0,
+        phoneNumber: 0,
         loaded: false,
         cartOpen: !this.isMobile(),
         total: 0,
@@ -60,7 +68,13 @@
       
     },
     methods: {
-  
+      successOtpSend(phone){
+        this.phoneNumber = phone;
+        this.step++;
+      },
+      validateOtp(){
+        this.step++;
+      },
       loadData(){
             this.showLoader = true;   
             this.api({ action: 'api/get_open_order_numbers'}, (data) => {

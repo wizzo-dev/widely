@@ -3,11 +3,11 @@
         <h2 class="title" v-html="words.number_to_activate"></h2>
         <div id="number_and_arrows">
             <div>
-                <a v-if="is_prev" class="move" @click="change_active_number('prev')" v-html="words.prev_num"></a>
+                <a v-if="is_prev" class="move" @click="changeActiveNumber('prev')" v-html="words.prev_num"></a>
             </div>
             <div id="active_number_input" v-html="activeItem.number"></div>
             <div>
-                <a v-if="is_next" class="move" @click="change_active_number('next')" v-html="words.next_num"></a>
+                <a v-if="is_next" class="move" @click="changeActiveNumber('next')" v-html="words.next_num"></a>
             </div>
         </div>
         <form class="small_form" @submit.prevent="submit()">
@@ -78,7 +78,7 @@ export default {
 
     numbers: {
       required: true,
-      type: Number,
+      type: Array,
     },
     
   },
@@ -97,20 +97,20 @@ export default {
         return this.$store.state.words
       },
       isNext(){
-        if(!this.numbers[(this.active_item.id + 1)])
+        if(!this.numbers[(this.activeItem.id + 1)])
             {
                 return false;
             }
-        return this.numbers[(this.active_item.id + 1)]; 
+        return this.numbers[(this.activeItem.id + 1)].id; 
     },
     isPrev(){
-        if(!this.numbers[(this.active_item.id - 1)])
+        if(!this.numbers[(this.activeItem.id - 1)])
             {
                 return false;
             }
-        return this.numbers[(this.active_item.id - 1)]; 
+        return this.numbers[(this.activeItem.id - 1)].id; 
     },
-      active_item(){
+    activeItem(){
         var item = {};
         for(let i in this.numbers)
             {
@@ -126,10 +126,10 @@ export default {
         changeActiveNumber(type){
 			if(type == 'next')
 				{
-					this.activeNumber = this.is_next.id;
+					this.activeNumber = this.is_next;
 				}
 			else{
-					this.activeNumber = this.is_prev.id;
+					this.activeNumber = this.is_prev;
 			}
 		},
         loadData: function(){
