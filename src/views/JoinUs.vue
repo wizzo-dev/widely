@@ -80,7 +80,7 @@
           <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FifthStep v-if="step === 5" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <SendOtp v-if="step === 7" :phoneNumber="form.phone_number" @success="step = 8" />
-          <ValidateOtpWithId v-if="step === 8" :idCard="form.id_card" :phoneNumber="form.phone_number" />
+          <ValidateOtpWithId v-if="step === 8" :idCard="form.id_card" :phoneNumber="form.phone_number" @success="step = 4;otpValidate = true" />
         </div>
       </div>
     </div>
@@ -106,6 +106,7 @@ export default {
     
     return {
       selectedIds: '',
+      otpValidate:false,
       activeNumber: 0,
       step: 1,
       deletedPrice: 0,
@@ -275,10 +276,9 @@ export default {
            return this.showLoader = false
 
           } else {
-            if (data.data.data.exists && !this.otp_validate) {
+            if (data.data.data.exists && !this.otpValidate) {
               this.api({ action: 'cart/add_cart_data', data: formData })
               this.showLoader = false
-
               this.$swal
                 .fire({
                   icon: 'info',
@@ -296,7 +296,7 @@ export default {
                     this.step = 2
                   }
                 })
-            } else if (data.data.data.exists && this.otp_validate) {
+            } else if (data.data.data.exists && this.otpValidate) {
 
               this.step = 4
               this.showLoader = false
