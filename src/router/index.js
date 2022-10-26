@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import JoinUs from '../views/JoinUs.vue'
+import Activate from '../views/ActivatePage.vue'
+
 
 const routes = [
   {
     path: '/',
     name: 'JoinUs',
     component: JoinUs
+  },
+  {
+    path: '/Activate',
+    name: 'Activate',
+    component: Activate
   },
 ]
 
