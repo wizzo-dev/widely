@@ -65,7 +65,7 @@ $mobileWidth: 750px;
 						.item_page{color:#fff;height: 25px;width: 25px;border-radius: 100%;text-align: center;font-weight: 600;line-height: 1;font-size: 14px;background: rgba(0, 0, 0, 0.2);}
 						.item_page.active{background: $mainColor}
 					}
-					.btn{background: $mainColor;color: #fff;border: none;padding: 10px 30px;border-radius: 30px;line-height: 1;font-size: 18px}
+					.btn{background: $mainColor;color: #fff;border: none;padding: 10px 30px;border-radius: 30px;line-height: 1;font-size: 18px;font-family: 'leon';}
 					.dashed{text-align: center;border: 2px dashed rgba(0, 0, 0, 0.2);border-radius: 10px;font-weight: 900;color: rgba(0, 0, 0, 0.2);cursor: pointer;background: transparent}
 				}
 				.number_wrapper.alert{border: 2px solid red}

@@ -1,15 +1,15 @@
 <template>
     <div class="form">
         <h2 class="title" v-html="$store.state.words.insert_otp"></h2>
-        <form class="form_steps" @submit.prevent="validate_otp()">
+        <form class="form_steps" @submit.prevent="validateOtp()">
             <div class="form-item">
                 <input input-mode="numeric" type="number" id="otp" v-model="otp" autocomplete="off" required/>
-                <label for="otp" v-html="words.my_otp_is"></label>
+                <label for="otp" v-html="$store.state.words.my_otp_is"></label>
             </div>
             <div class="btn_wrapper">
                 <button type="button" class="btn btn-primary" :disabled="allowCodeSend" @click="startCountdown">
-                    <vue-countdown v-if="allowCodeSend" :time="60000" @end="onCountdownEnd" v-slot="{ totalSeconds }">{{ $store.state.words.send_more_code }} {{ totalSeconds }}</vue-countdown>
-                    <span v-else >{{$store.state.words.send_code}}</span>
+                  <vue-countdown v-if="allowCodeSend" :time="60000" @end="onCountdownEnd" v-slot="{ totalSeconds }">{{ $store.state.words.send_more_code }} {{ totalSeconds }}</vue-countdown>
+                  <span v-else >{{$store.state.words.send_code}}</span>
                 </button>
                 <input type="submit" class="btn" :value="words.procced"/>
             </div>
@@ -31,15 +31,11 @@ export default {
       required: true,
       type: Number,
     },
-    idCard: {
-      required: true,
-      type: Number,
-    },
     
   },
     data() {
         return {
-            allowCodeSend:false,
+            allowCodeSend:true,
             otp:'',
         }
     },
@@ -52,24 +48,33 @@ export default {
       }
     },
     methods:{
-    startCountdown(){
+      startCountdown(){
         this.$emit('sendOtp');
         this.allowCodeSend = true;
       },
       onCountdownEnd() {
         this.allowCodeSend = false;
       },
-        validateOtp(){
-			this.allowCodeSend = false;
-            
-			this.api_call({ action: 'api/validate_otp_with_id', data:{ phone:this.phoneNumber ,code: this.otp , id:this.idCard }},(data) => {
+      validateOtp(){
+
+			var phone = '';
+			this.allow_code_send = false;
+			if(this.activeItem && this.activeItem.number && this.activeItem.number.length != '')
+				{
+					phone = this.activeItem.number;
+				}
+			else{
+				phone = this.phoneNumber;
+			}
+			this.api({ action: 'api/validate_otp', data:{ phone:phone ,code: this.otp }}, (data) => {
 					if(data.data.error && data.data.error != "")
 					{
-						this.activate_error(data.data.error);
+						this.activateError(data.data.error);
 					}
 					else{
-						this.$emit("success");
+              this.$emit("success");
 					}
+					
                 });
 		},
     }

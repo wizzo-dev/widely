@@ -1,9 +1,9 @@
 <template>
     <div class="form">
         <h2 class="title" v-html="words.activate_title"></h2>
-        <form class="form_steps" @submit.prevent="send_otp()">
+        <form class="form_steps" @submit.prevent="sendOtp()">
             <div class="form-item">
-                <input input-mode="numeric" type="number" id="phone" v-model="phoneNumber" autocomplete="off" required/>
+                <input input-mode="numeric" type="number" id="phone" v-model="phoneNumberLocal" autocomplete="off" required/>
                 <label for="phone" v-html="words.my_number_is"></label>
             </div>
             <div class="btn_wrapper">
@@ -21,15 +21,19 @@ export default {
       required: true,
       type: Array,
     },
+    phoneNumber: {
+      required: true,
+      type: Text,
+    },
     
   },
     data() {
         return {
-            phoneNumber:'',
+            phoneNumberLocal:''
         }
     },
     mounted(){
-
+        if(this.phoneNumber != '') this.phoneNumberLocal = this.phoneNumber;
     },
     computed: {
       words() {
@@ -37,9 +41,11 @@ export default {
       }
     },
     methods:{
-        send_otp(move = false)
+        sendOtp()
 		{
-			this.api_call({ url: 'api/send_otp', data: { number:this.phoneNumber }, onComplete: (data) => {
+            let phoneNumber = '0'+this.phoneNumberLocal ;
+            
+			this.api({ action: 'api/send_otp', data: { number:phoneNumber }}, (data) => {
                 if(data.data.error && data.data.error != "")
 					{
 						this.activateError(data.data.error);
@@ -47,14 +53,13 @@ export default {
                     else{
                         if(data.data)
                         {
-                            this.$emit("success");
+                            this.$emit("success" , phoneNumber);
                         }
                         else{
-                            this.activateError(this.words.goto_help);
+                            this.activateError(this.$store.state.words.goto_help);
                         }
                     }
-				 	
-                }});
+                });
 		},
     }
 }
