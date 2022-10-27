@@ -18,14 +18,17 @@ import { faTrashAlt, faShoppingCart, faTimes} from '@fortawesome/free-solid-svg-
 library.add(faTrashAlt, faShoppingCart, faTimes)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
 
-
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 app.use(VueAxios, axios)
 
-import VueSweetalert2 from 'vue-sweetalert2';
+import VueCreditCardValidation from 'vue-credit-card-validation'
 
-import 'sweetalert2/dist/sweetalert2.min.css';
+app.use(VueCreditCardValidation)
+
+import VueSweetalert2 from 'vue-sweetalert2'
+
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 app.use(VueSweetalert2);
 
