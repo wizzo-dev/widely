@@ -73,7 +73,7 @@ export default {
 		this.api({action: 'cart/save_city',data: { city: this.selectedCity }});
 	},
 	openUser() {  
-			this.$emit('showLoader', true);
+			this.$store.commit('setIsLoading', {isLoading: true});
 			if(this.approve === 0) this.activateError(this.words.please_approve);
 			else {
 				this.$emit('saveData',null, true);
@@ -86,14 +86,14 @@ export default {
 					if(data.data.error && data.data.error != "") {
 													
 						this.activateError(data.data.error);
-						return this.$emit('showLoader', false);
+						return this.$store.commit('setIsLoading', {isLoading: true});
 					}
 					else if(data.data && !this.skipPay) {
 						this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
 					}
 				});
 			}
-			this.$emit('showLoader', false);
+			this.$store.commit('setIsLoading', {isLoading: true});
 			
 	},
 	saveDidsToAccount() {
@@ -101,7 +101,7 @@ export default {
 			this.api({ action: 'api/save_dids_to_account'}, (data)=>{
 			if(data.data.error && data.data.error != "") {
 			this.activateError(data.data.error);
-			this.$emit('showLoader', false);
+			this.$store.commit('setIsLoading', {isLoading: true});
 			} else document.location = '/activate';
 
 			this.$emit('saveData',false);

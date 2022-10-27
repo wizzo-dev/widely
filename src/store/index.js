@@ -2,7 +2,8 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    words: []
+    words: [],
+    isLoading: false
   },
   getters: {
   },
@@ -10,6 +11,9 @@ export default createStore({
     setWords(state, payload) {
       state.words = payload.words
     },
+    setIsLoading(state, payload) {
+      state.isLoading = payload.isLoading
+    }
   },
   actions: {
   },

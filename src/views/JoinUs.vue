@@ -1,14 +1,6 @@
 <template>
   <div id="join_us">
-    <div id="wave_animation_wrapper" v-if="showLoader">
-      <div id="wave_animation">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
+
     <div class="wrapper">
       <div class="forms">
         <div class="steps" v-if="step > 0">
@@ -77,8 +69,8 @@
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
-          <FourthStep v-if="step === 4" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
-          <FifthStep v-if="step === 5" :skipPay="skipPay" @showLoader="toggleLoader" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <FourthStep v-if="step === 4" :skipPay="skipPay" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <FifthStep v-if="step === 5" :skipPay="skipPay" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <SendOtp v-if="step === 7" :phoneNumber="form.phone_number" @success="step = 8" />
           <ValidateOtpWithId v-if="step === 8" :idCard="form.id_card" :phoneNumber="form.phone_number" @success="step = 4;otpValidate = true" />
         </div>
@@ -110,7 +102,6 @@ export default {
       activeNumber: 0,
       step: 1,
       deletedPrice: 0,
-      showLoader: false,
       loaded: false,
       cartOpen: !this.isMobile(),
       numbersInfo: [],
@@ -155,9 +146,7 @@ export default {
       })
     },
 
-    toggleLoader(isLoaderShow){
-      this.showLoader = isLoaderShow;
-    },
+
 
     goToStep(step){
       this.step = step > 0 ? step : 1;
@@ -263,7 +252,7 @@ export default {
         }
         this.form = {...this.form, ...formData};
       }
-      this.showLoader = true;
+     this.$store.commit('setIsLoading', {isLoading: true})
 
       this.api(
         {
@@ -273,12 +262,12 @@ export default {
         (data) => {
           if (data.data.error && data.data.error != '') {
             this.activateError(data.data.error)
-           return this.showLoader = false
+           return this.$store.commit('setIsLoading', {isLoading: false})
 
           } else {
             if (data.data.data.exists && !this.otpValidate) {
               this.api({ action: 'cart/add_cart_data', data: formData })
-              this.showLoader = false
+              this.$store.commit('setIsLoading', {isLoading: false})
               this.$swal
                 .fire({
                   icon: 'info',
@@ -287,6 +276,7 @@ export default {
                   showCancelButton: false,
                   confirmButtonText: 'המשך לזיהוי',
                   denyButtonText: 'שימוש במספר זהות אחר',
+                  customClass:{container: 'second_step_swal'}
                 })
                 .then((result) => {
                   if (result.isConfirmed) {
@@ -299,7 +289,7 @@ export default {
             } else if (data.data.data.exists && this.otpValidate) {
 
               this.step = 4
-              this.showLoader = false
+              this.$store.commit('setIsLoading', {isLoading: false})
             } else {
 
               this.api(
@@ -308,7 +298,7 @@ export default {
                   if (!dontMoveStep) {
                     this.step++
                     window.scrollTo(0, 0)
-                    this.showLoader = false
+                    this.$store.commit('setIsLoading', {isLoading: false})
                   }
                 }
               )
