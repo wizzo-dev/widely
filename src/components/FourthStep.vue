@@ -8,14 +8,14 @@
 						<div class="small_title bold" v-html="words.email"></div>
 						<div class="radio"></div>
 						<div class="value semi_bold">
-							{{ form.email }} <a class="change_number semi_bold" @click="$emit('goToStep', 2)" v-html="words.change_number"></a>
+							{{ form.email }} <a class="change_number semi_bold" @click.stop="$emit('goToStep', 2)" v-html="words.change_number"></a>
 						</div>
 					</div>
 					<div :class="'option '+(form.invoice == '1' ? 'active' : '')" @click="form.invoice = 1">
 						<div class="small_title bold" v-html="words.send_sms"></div>
 						<div class="radio"></div>
 						<div class="value semi_bold">
-							{{ form.phone_number }} <a class="change_number semi_bold" @click="$emit('goToStep', 2)" v-html="words.change_number"></a>
+							{{ form.phone_number }} <a class="change_number semi_bold" @click.stop="$emit('goToStep', 2)" v-html="words.change_number"></a>
 						</div>
 					</div>
 				</div>
@@ -86,14 +86,14 @@ export default {
 					if(data.data.error && data.data.error != "") {
 													
 						this.activateError(data.data.error);
-						return this.$store.commit('setIsLoading', {isLoading: true});
+						return this.$store.commit('setIsLoading', {isLoading: false});
 					}
 					else if(data.data && !this.skipPay) {
 						this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
 					}
 				});
 			}
-			this.$store.commit('setIsLoading', {isLoading: true});
+			this.$store.commit('setIsLoading', {isLoading: false});
 			
 	},
 	saveDidsToAccount() {
@@ -101,7 +101,7 @@ export default {
 			this.api({ action: 'api/save_dids_to_account'}, (data)=>{
 			if(data.data.error && data.data.error != "") {
 			this.activateError(data.data.error);
-			this.$store.commit('setIsLoading', {isLoading: true});
+			this.$store.commit('setIsLoading', {isLoading: false});
 			} else document.location = '/activate';
 
 			this.$emit('saveData',false);

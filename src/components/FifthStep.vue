@@ -65,7 +65,7 @@ export default {
 				}
 				else document.location = '/activate';
 					
-			this.$store.commit('setIsLoading', {isLoading: true});
+			this.$store.commit('setIsLoading', {isLoading: false});
 			})
 		},
   },
