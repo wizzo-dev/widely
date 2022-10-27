@@ -2,14 +2,14 @@
 	<div class="form">
 		<div class="step_title">{{ words.step }} {{ step }}</div>
 		<h2 class="title">{{ words.hey }} {{ form.first_name }}, {{ words.whats_your_address }}</h2>
-		<form class="small_form" @submit.prevent="$emit('saveData', form)">
+		<form class="small_form" @submit.prevent="$emit('saveData', {...form, city: selectedCity, street: selectedStreet})">
 			<div class="small_title">{{ words.whats_your_city }}</div>
 			<div class="form-item" >
-				<Select2 v-model="selectedCity" :settings="settingsCity" @select="onSelectCity()"/>
+				<Select2 v-model="selectedCity" :required="true" :settings="settingsCity" @select="onSelectCity()"/>
 			</div>
 			<div class="small_title" v-if="openStreet">{{ words.whats_your_street }}</div>
 			<div class="form-item" v-if="openStreet">
-				<Select2 v-model="selectedStreet" :settings="settingsStreet" />
+				<Select2 v-model="selectedStreet" :required="true" :settings="settingsStreet" />
 			</div>
 			<div class="small_title">{{ words.whats_your_address }}</div>
 			<div class="options">
@@ -101,18 +101,25 @@ export default {
 	}
   },
   props: {
-    numbersInfo: {
-      required: true,
-      type: Array,
-    },
-    step: {
-      required: true,
-      type: Number,
-    },
-    numbers: {
-      required: true,
-      type: Array,
-    },
+	numbersInfo: {
+	required: true,
+	type: Array,
+	},
+	step: {
+	required: true,
+	type: Number,
+	},
+	numbers: {
+	required: true,
+	type: Array,
+	},
+	parentForm: {
+	required: true,
+	type: Object,
+	},
+   },
+   mounted() {
+	if (this.parentForm && Object.entries(this.parentForm).length) this.form = {...this.parentForm}
   },
   computed: {
     words() {

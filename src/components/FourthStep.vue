@@ -8,14 +8,14 @@
 						<div class="small_title bold" v-html="words.email"></div>
 						<div class="radio"></div>
 						<div class="value semi_bold">
-							{{ form.email }} <a class="change_number semi_bold" @click="$emit('goToStep', 2)" v-html="words.change_number"></a>
+							{{ form.email }} <a class="change_number semi_bold" @click.stop="$emit('goToStep', 2)" v-html="words.change_number"></a>
 						</div>
 					</div>
 					<div :class="'option '+(form.invoice == '1' ? 'active' : '')" @click="form.invoice = 1">
 						<div class="small_title bold" v-html="words.send_sms"></div>
 						<div class="radio"></div>
 						<div class="value semi_bold">
-							{{ form.phone_number }} <a class="change_number semi_bold" @click="$emit('goToStep', 2)" v-html="words.change_number"></a>
+							{{ form.phone_number }} <a class="change_number semi_bold" @click.stop="$emit('goToStep', 2)" v-html="words.change_number"></a>
 						</div>
 					</div>
 				</div>
@@ -73,7 +73,7 @@ export default {
 		this.api({action: 'cart/save_city',data: { city: this.selectedCity }});
 	},
 	openUser() {  
-			this.$emit('showLoader', true);
+			this.$store.commit('setIsLoading', {isLoading: true});
 			if(this.approve === 0) this.activateError(this.words.please_approve);
 			else {
 				this.$emit('saveData',null, true);
@@ -86,14 +86,14 @@ export default {
 					if(data.data.error && data.data.error != "") {
 													
 						this.activateError(data.data.error);
-						return this.$emit('showLoader', false);
+						return this.$store.commit('setIsLoading', {isLoading: false});
 					}
 					else if(data.data && !this.skipPay) {
 						this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
 					}
 				});
 			}
-			this.$emit('showLoader', false);
+			this.$store.commit('setIsLoading', {isLoading: false});
 			
 	},
 	saveDidsToAccount() {
@@ -101,7 +101,7 @@ export default {
 			this.api({ action: 'api/save_dids_to_account'}, (data)=>{
 			if(data.data.error && data.data.error != "") {
 			this.activateError(data.data.error);
-			this.$emit('showLoader', false);
+			this.$store.commit('setIsLoading', {isLoading: false});
 			} else document.location = '/activate';
 
 			this.$emit('saveData',false);

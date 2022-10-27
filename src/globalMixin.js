@@ -56,7 +56,7 @@ const globalMixin = {
         let cookieValue = (str == '' ? '0' : '1');
         document.cookie = cookieName +"=" + cookieValue + ";expires=" + myDate + ";domain=.nadlancenter;path=/";
       },
-      activateInfo(text) {
+      activateInfo(text, className = '') {
         this.$swal({
           icon:  'info',
           title: text,
@@ -64,16 +64,18 @@ const globalMixin = {
           showCancelButton: false,
           confirmButtonText: 'הפעלה ממספר אחר',
           denyButtonText: 'חזרה לדף הבית',
+          customClass:{container: className}
         })
       },
 
-      activateError(text) {
+      activateError(text, className = '') {
         this.$swal({
           icon: 'error',
           text: text,
           showCloseButton: true,
           showCancelButton: false,
           showConfirmButton: false,
+          customClass:{container: className}
         })
       },
 

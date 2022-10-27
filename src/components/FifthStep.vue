@@ -56,16 +56,16 @@ export default {
   },
   methods: {
 		saveCredit() {
-			this.$emit('showLoader', true);
+			this.$store.commit('setIsLoading', {isLoading: true});
 			this.show_loader = true;
 			this.api({ action: 'api/save_dids', data: this.credit}, (data)=>{
 				if(data.data.error && data.data.error != "") {
 				this.$emit('activateError', data.data.error);
-				this.$emit('showLoader', false);
+				this.$store.commit('setIsLoading', {isLoading: true});
 				}
 				else document.location = '/activate';
 					
-			this.$emit('showLoader', false);
+			this.$store.commit('setIsLoading', {isLoading: false});
 			})
 		},
   },
