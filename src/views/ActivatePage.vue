@@ -1,14 +1,5 @@
 <template>
-    <div id="join_us">
-      <div id="wave_animation_wrapper" v-if="showLoader">
-        <div id="wave_animation">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
+    <div id="join_us" v-if="loaded">
       <div class="wrapper">
         <div class="forms">
           <div class="steps" v-if="step > 0">
@@ -21,10 +12,10 @@
             </ul>
           </div>
           <div id="form">
-            <activateNumber v-if="step === 1" :step="step" :numbers="numbers"  />
+            <activateNumber v-if="step === 1" :step="step" :numbers="numbers" :personalInfo="personalInfo" @qrActivated="qrActivated" @sendOtpForMobility="sendOtpForMobility"/>
             <sendOtp v-if="step === 2" :phoneNumber="phoneNumber" @success="successOtpSend"/>
             <validateOtp v-if="step === 3" :phoneNumber="phoneNumber" @success="validateOtp"/>
-            <activateQr v-if="step === 4"/>
+            <activateQr v-if="step === 4" :qrCode="qrCode"/>
           </div>
         </div>
       </div>
@@ -44,7 +35,7 @@
     components: { activateNumber, sendOtp ,validateOtp, activateQr},
     data() {
       return {
-        step: 2,
+        step: 1,
         deletedPrice: 0,
         phoneNumber: 0,
         loaded: false,
@@ -54,8 +45,8 @@
         numbers: [],
         personalInfo: {},
         skipPay: false,
-        showLoader:false,
-        numberOfSteps:5
+        numberOfSteps:5,
+        qrCode:''
       }
     },
     mounted() {
@@ -76,7 +67,7 @@
         this.step++;
       },
       loadData(){
-            this.showLoader = true;   
+            this.$store.commit('setIsLoading', {isLoading: true})  
             this.api({ action: 'api/get_open_order_numbers'}, (data) => {
               if(data.data.error && data.data.error != "")
               {
@@ -85,11 +76,18 @@
             else{
               if(!data.data.length > 0)
                 {
-                this.activateInfo(this.words.no_numbers_av).then((result) => {
+                  this.$swal({
+                  icon:  'info',
+                  title: this.$store.state.words.no_numbers_av,
+                  showDenyButton: true,
+                  showCancelButton: false,
+                  confirmButtonText: 'הפעלה ממספר אחר',
+                  denyButtonText: 'חזרה לדף הבית',
+                }).then((result) => {
                   if (result.isConfirmed) {
                     this.step = 2;
                   } else if (result.isDenied) {
-                    this.alert("vacvh");
+                  document.location = '/';
                   }
                 });
                 }
@@ -105,26 +103,17 @@
               }
       
             });
-                  
-            this.loadInfo();
+            this.loaded = true;
           
           },
-          loadInfo: function(){
-            this.api({ action: 'cart/load_info', data: {}  , onComplete: (data) => {
-            if(data.data.error && data.data.error != "")
-              {
-                this.activateError(data.data.error);
-              }
-            else{
-                this.personalInfo = data.data;
-              }
-            }});
-            this.showLoader = false;
+          sendOtpForMobility(phoneNumber){
+            this.phoneNumber = phoneNumber;
+            this.step = 2;
           },
-  
-   
-
-  
+          qrActivated(qrCode){
+            this.qrCode = qrCode;
+            this.step = 4;
+          },
     },
   }
   </script>

@@ -1,7 +1,7 @@
 <template>
     <div class="form">
         <h2 class="title" v-html="$store.state.words.activate_esim_scan"></h2>
-        <qrcode-vue :value="qrValue" :size="qrSize" level="H" id="qrCode"/>
+        <qrcode-vue :value="qrCode" :size="qrSize" level="H" id="qrCode"/>
         <a class="btn" @click="downloadImage" v-html="$store.state.words.activate_esim_download"></a>
         <h2 class="title" v-html="$store.state.words.activate_esim_send_to_mail"></h2>
         <form class="form_steps" @submit.prevent="sendQrToMail()" style="margin-bottom: 50px">
@@ -24,9 +24,9 @@
 export default {
   components: { QrcodeVue },
   props: {
-    step: {
+    qrCode: {
       required: true,
-      type: Number,
+      type: Text,
     },
   },
     data() {
@@ -34,7 +34,7 @@ export default {
             phoneNumber:'',
             email:'',
             qrSize:300,
-            qrValue:'LPA:1$smdp.io$4K-1M7KT9-18MJUAY',
+            qrValue:'LPA:1$smdp.io$4K-1M7L9N-1FGG29N',
             activeNumber:0,
             userLoged:true
         }
@@ -44,32 +44,7 @@ export default {
     computed: {
       words() {
         return this.$store.state.words
-      },
-      isNext(){
-        if(!this.numbers[(this.active_item.id + 1)])
-            {
-                return false;
-            }
-        return this.numbers[(this.active_item.id + 1)]; 
-    },
-    isPrev(){
-        if(!this.numbers[(this.active_item.id - 1)])
-            {
-                return false;
-            }
-        return this.numbers[(this.active_item.id - 1)]; 
-    },
-    activeItem(){
-        var item = {};
-        for(let i in this.numbers)
-            {
-                if(this.numbers[i].id == this.activeNumber)
-                    {
-                        item = this.numbers[i];
-                    }
-            }
-        return item;  
-        }, 
+      }
     },
     methods:{
         downloadImage(){
@@ -78,18 +53,40 @@ export default {
             link.href = document.getElementById('qrCode').toDataURL();
             link.click();
         },
-        sendQrToMail: function()
+        sendQrToMail()
 		{
-			this.api({ action: 'sendQrToMail', data: { qr: this.qrValue, email:this.email }} , (data) => {
+			this.api({ action: 'sendQrToMail', data: { qr: this.qrCode, email:this.email }} , (data) => {
                 if(data.data.error && data.data.error != "")
                 {
                     this.activateError(data.data.error);
                 }
                 else{
-                    this.alert(this.$store.state.words.send_succesfuly);
+                    this.activateSuccess(this.$store.state.words.send_succesfuly);
                 }	 
             });
-		},
-        }
+		},		
+		finish(){
+			this.api({ action: 'api/get_open_order_numbers', data: {}}, (data) => {
+			if(data.data.error && data.data.error != "")
+				{
+					this.activateError(data.data.error);
+				}
+			else{
+				if(data.data.length > 0)
+					{
+                        this.$emit('loadData');
+					}
+				else{
+					this.activateSuccess(this.$store.state.words.finish_all);
+                        this.api({ action: 'cart/finish'});
+                        setTimeout( ()=> {
+                                document.location = '/';
+                        },3000);
+                    }
+				}
+
+			});
+		},	
+    }
 }
 </script>

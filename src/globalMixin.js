@@ -66,6 +66,30 @@ const globalMixin = {
           denyButtonText: 'חזרה לדף הבית',
         })
       },
+      activatePromptExit: function(text , icon = 'error')
+      {
+        this.$swal({
+          icon: icon,
+          text: text,
+        showCloseButton: false,
+        showCancelButton: false, 
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        confirmButtonText: 'אוקיי',
+        }).then(() => {
+          document.location = '/';
+        });
+      },
+
+      activateSuccess(text) {
+        this.$swal({
+          icon: 'success',
+          text: text,
+          showCloseButton: true,
+          showCancelButton: false,
+          showConfirmButton: false,
+        })
+      },
 
       activateError(text) {
         this.$swal({

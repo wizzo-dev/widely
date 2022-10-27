@@ -71,7 +71,6 @@
             
           </div>
         </div>
-
         <div id="form">
           <routerLink to="/" class="clean_link go_back_home" v-html="$store.state.words.go_back_home"></routerLink>
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
