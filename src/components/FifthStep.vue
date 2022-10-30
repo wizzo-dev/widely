@@ -59,11 +59,11 @@ export default {
 			this.$store.commit('setIsLoading', {isLoading: true});
 			this.show_loader = true;
 			this.api({ action: 'api/save_dids', data: this.credit}, (data)=>{
-				if(data.data.error && data.data.error != "") {
-				this.$emit('activateError', data.data.error);
-				this.$store.commit('setIsLoading', {isLoading: true});
+				if(data.data?.error && data.data?.error != "") {
+				this.activateError(data.data.error);
+				this.$store.commit('setIsLoading', {isLoading: false});
 				}
-				else document.location = '/activate';
+				// else document.location = '/activate';
 					
 			this.$store.commit('setIsLoading', {isLoading: false});
 			})
