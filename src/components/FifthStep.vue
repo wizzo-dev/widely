@@ -5,7 +5,7 @@
 		<form class="small_form" @submit.prevent="saveCredit()">
 			<div class="form-item">
 				<input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
-						maxlength="16"  type="number" id="card_number" v-model="credit.number" autocomplete="off" required/>
+						maxlength="16"  type="tel" id="card_number" v-model="credit.number" autocomplete="off" v-cardformat:restrictNumeric v-cardformat:formatCardNumber required/>
 				<label for="card_number" v-html="words.card_number"></label>
 			</div>
 			<div class="form-item">
@@ -14,11 +14,11 @@
 			</div>
 			<div class="options">
 				<div class="form-item">
-					<input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  maxlength="5" id="expire" type="text" autocomplete="off" v-model="credit.expire" required>
+					<input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" v-cardformat:formatCardExpiry  maxlength="5" id="expire" type="text" autocomplete="off" v-model="credit.expire" required>
 					<label for="street" v-html="words.expire"></label>
 				</div>
 				<div class="form-item">
-					<input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  maxlength="4" id="cvv" type="number" autocomplete="off" v-model="credit.cvv" required>
+					<input oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" v-cardformat:formatCardCVC  maxlength="4" id="cvv" type="number" autocomplete="off" v-model="credit.cvv" required>
 					<label for="street" v-html="words.cvv"></label>
 				</div>
 			</div>
@@ -59,11 +59,11 @@ export default {
 			this.$store.commit('setIsLoading', {isLoading: true});
 			this.show_loader = true;
 			this.api({ action: 'api/save_dids', data: this.credit}, (data)=>{
-				if(data.data.error && data.data.error != "") {
-				this.$emit('activateError', data.data.error);
-				this.$store.commit('setIsLoading', {isLoading: true});
+				if(data.data?.error && data.data?.error != "") {
+				this.activateError(data.data.error);
+				this.$store.commit('setIsLoading', {isLoading: false});
 				}
-				else document.location = '/activate';
+				// else document.location = '/activate';
 					
 			this.$store.commit('setIsLoading', {isLoading: false});
 			})

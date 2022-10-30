@@ -68,7 +68,7 @@
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
-          <FourthStep v-if="step === 4" :skipPay="skipPay" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
+          <FourthStep v-if="step === 4" :skipPay="skipPay" @goToStep="goToStep" :email="form.email ||''" :phone="form.phone_number || ''" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FifthStep v-if="step === 5" :skipPay="skipPay" @goToStep="goToStep" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <SendOtp v-if="step === 7" :phoneNumber="form.phone_number" @success="step = 8" />
           <ValidateOtpWithId v-if="step === 8" :idCard="form.id_card" :phoneNumber="form.phone_number" @success="step = 4;otpValidate = true" />
@@ -147,9 +147,6 @@ export default {
         this.deletedPrice = data.data.total_price_deleted;
       })
     },
-
-
-
     goToStep(step){
       this.step = step > 0 ? step : 1;
     },

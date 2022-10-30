@@ -14,21 +14,22 @@ const app = createApp({
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTrashAlt, faShoppingCart, faTimes} from '@fortawesome/free-solid-svg-icons'
-
 library.add(faTrashAlt, faShoppingCart, faTimes)
 app.component('FontAwesomeIcon', FontAwesomeIcon)
-
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 app.use(VueAxios, axios)
 
-import VueSweetalert2 from 'vue-sweetalert2';
+import SignaturePad from 'vue3-signature-pad'
+app.use(SignaturePad)
 
-import 'sweetalert2/dist/sweetalert2.min.css';
+import VueCreditCardValidation from 'vue-credit-card-validation'
+app.use(VueCreditCardValidation)
 
-app.use(VueSweetalert2);
-
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
+app.use(VueSweetalert2)
 
 app.mixin(globalMixin)
 app.mount('#app')

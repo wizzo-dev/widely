@@ -40,7 +40,13 @@
 export default {
   data() {
     return {
-        form: {}
+        form: {
+			id_card: '',
+			first_name: '',
+			last_name: '',
+			email: '',
+			phone_number: '',
+		}
     }
   },
   props: {
@@ -62,7 +68,13 @@ export default {
     },
   },
   mounted() {
-	if (this.parentForm && Object.entries(this.parentForm).length) this.form = {...this.parentForm}
+	if (this.parentForm && Object.entries(this.parentForm).length) {
+		this.form.id_card = this.parentForm.id_card;
+		this.form.first_name = this.parentForm.first_name;
+		this.form.last_name = this.parentForm.last_name;
+		this.form.email = this.parentForm.email;
+		this.form.phone_number = this.parentForm.phone_number;
+	}
   },
   computed: {
     words() {
