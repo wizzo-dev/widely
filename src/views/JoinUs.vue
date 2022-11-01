@@ -112,6 +112,7 @@ export default {
     }
   },
   mounted() {
+    
     this.loadData();
     this.getNumbers();
   },
@@ -127,7 +128,13 @@ export default {
   methods: {
     /* eslint-disable */
     loadData(activeNumber = false, dontAdd = false, dontRefresh = false) {
-      this.api({ action: 'cart/get', method: 'post' }, (data) => {
+      let plan = '';
+      if(this.$route.query.plan && this.$route.query.plan != '')
+      {
+         plan = this.$route.query.plan;
+         this.$router.replace({'query': null});
+      }
+      this.api({ action: 'cart/get',data:{plan:plan}, method: 'post' }, (data) => {
         if (this.loaded && !dontAdd) {
           this.numbersValidation();
         }
@@ -191,12 +198,13 @@ export default {
     numbersValidation(next = false,numberId = false) {
       for (let i in this.numbersInfo) {
         if (this.numbersInfo[i].phone_number.length < 10) {
-          this.numbersInfo[i].alert = true
+          this.activeNumber = this.numbersInfo[i].id;
+          this.numbersInfo[i].alert = true;
           return false
         }
       }
 
-      
+     
       this.api({action: 'cart/numbers_validation',data: { numbers_array: this.numbersInfo },},
         (data) => {
           if (data.data?.error && data.data.error != '')

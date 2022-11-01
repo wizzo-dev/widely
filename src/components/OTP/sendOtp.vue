@@ -38,7 +38,7 @@ export default {
     methods:{
         sendOtp()
 		{
-            let phoneNumber = '0'+this.phoneNumberLocal ;
+            let phoneNumber = this.phoneNumberLocal ;
             
 			this.api({ action: 'api/send_otp', data: { number:phoneNumber }}, (data) => {
                 if(data.data.error && data.data.error != "")

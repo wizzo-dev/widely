@@ -11,13 +11,14 @@ const routes = [
   },
   {
     path: '/Activate',
-    name: 'Activate',
+    name: 'activate',
     component: Activate
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
+  base: process.env.BASE_URL,
   routes
 })
 

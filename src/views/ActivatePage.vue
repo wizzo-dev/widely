@@ -64,7 +64,7 @@
         this.step++;
       },
       validateOtp(){
-        this.step++;
+        this.step = 1;
       },
       loadData(){
             this.$store.commit('setIsLoading', {isLoading: true})  
