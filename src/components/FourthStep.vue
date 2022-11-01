@@ -1,8 +1,8 @@
 <template>
-	<div class="form" id="fourth_step" style="margin: 0" >
+	<div class="form" id="fourth_step" style="margin: 0" v-if="loaded">
 			<div class="step_title" v-html="words.step+' '+ step"></div>
 			<h2 class="title" v-html="words.where_to_send_invoice"></h2>
-			<form class="small_form" @submit.prevent="openUser()">
+			<form class="" @submit.prevent="openUser()">
 				<div class="invoice_wrapper">
 					<div :class="'option '+(form.invoice == '0' ? 'active' : '')" @click="form.invoice = 0">
 						<div class="small_title bold" v-html="words.email"></div>
@@ -20,10 +20,12 @@
 					</div>
 				</div>
 				<div class="terms">
+					<h4 class="inner_title" v-html="words.read_terms"></h4>
 					<div class="pdf_wrapper">
+						<div v-html="terms"></div>
 					</div>
 					<div class="sig_wrapper">
-					<h4 v-html="words.sign_terms"></h4>
+					<h4 class="inner_title" v-html="words.sign_terms"></h4>
 					<SignaturePad :width="300" :height="100" :customStyle="sigPadStyle" ref="signaturePad"  />
 					<div class="sig_controls">
 						<a @click="clearSig" class="btn_clear_sig" v-html="words.clear_signature"></a>
@@ -47,7 +49,8 @@ export default {
 			invoice: 0 // invoice sending method, 0 = mail, 1 = SMS
 		},
 		isLoading: false,
-		pdfSrc: 'https://primemobile.co.il/media/terms.pdf',
+		terms: '',
+		loaded:false,
 		numOfPages: 0,
 		sigPadStyle: {border: 'black 1px solid', marginTop: '5px' }
 	}
@@ -78,12 +81,29 @@ export default {
       type: String,
     },
   },
+  mounted(){
+	this.$store.commit('setIsLoading', {isLoading: true});
+
+	this.api({ action: 'get_terms', data: { } }, (data) => {
+		this.terms = data.data.text;
+		this.loaded = true;
+		this.$store.commit('setIsLoading', {isLoading: false});
+
+	});
+  },
   computed: {
     words() {
       return this.$store.state.words
     },
   },
   methods: {
+	urltoFile(url, filename, mimeType){
+    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
+    return (fetch(url)
+        .then(function(res){return res.arrayBuffer();})
+        .then(function(buf){return new File([buf], filename, {type:mimeType});})
+    );
+},
 	onSelectCity() {
 		this.openStreet = true;
 		this.api({action: 'cart/save_city',data: { city: this.selectedCity }});
@@ -110,7 +130,9 @@ export default {
 			
 	},
 	saveDidsToAccount() {
-			this.$emit('saveData',null, true);
+			const { data } = this.$refs.signaturePad.saveSignature();
+			const formData = {signature: data}
+			this.$emit('saveData',formData, true);
 			this.api({ action: 'api/save_dids_to_account'}, (data)=>{
 			if(data.data.error && data.data.error != "") {
 			this.activateError(data.data.error);
@@ -129,6 +151,8 @@ export default {
 
 <style lang="scss">
    #fourth_step{
+	.pdf_wrapper{max-height: 200px;overflow-y: scroll;}
+	.inner_title{    font-weight: 900;margin: 20px 0;text-decoration: underline;}
 	.terms {
 		&{display: flex;flex-direction: column;justify-content: center;text-align: initial;}
 		.sig_wrapper{

@@ -170,7 +170,7 @@ export default {
                         }
                   });
                   this.activeNumber = false;
-                  return false;
+                  this.$store.commit('setIsLoading', {isLoading: false})  
               }
               else{
                   
