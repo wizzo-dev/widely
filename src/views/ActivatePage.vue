@@ -50,7 +50,10 @@
       }
     },
     mounted() {
-      this.loadData();
+      
+          this.loadData();
+       
+     
     },
     computed: {
       words() {
@@ -64,6 +67,7 @@
         this.step++;
       },
       validateOtp(){
+        this.loadData();
         this.step = 1;
       },
       loadData(){

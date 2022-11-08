@@ -93,6 +93,27 @@
               <div class="sub_title semi_bold" v-html="prod.description"></div>
             </div>
           </div>
+          <template  v-if="numbersUs.length > 0 && numbers_overseas_info">
+            <div class="prod" v-for="(number_oversea,n) in numbers_overseas_info" :key="n">
+              <div class="checkbox">
+                <label class="container_check">
+                  <input type="checkbox" v-model="activeItem.isUsNumber" @input="addUsNumber()" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="content">
+                <div class="title_prod bold" > {{number_oversea.title}}
+                    /
+                    <span class="semi_bold add_ils" v-html="number_oversea.price"></span>
+                    <span
+                      class="deleted_price add_ils"
+                      v-html="number_oversea.deleted_price"
+                    ></span>
+                </div>
+                <div class="sub_title semi_bold" v-html="number_oversea.description"></div>
+              </div>
+            </div>
+        </template>
         </div>
       </div>
     </div>
@@ -143,6 +164,14 @@ export default {
       required: true,
       type: Array,
     },
+    numbers_overseas_info: {
+      required: true,
+      type: Array,
+    },
+    numbersUs: {
+      required: true,
+      type: Array,
+    },
   },
   computed: {
     words() {
@@ -184,8 +213,11 @@ export default {
     this.$emit('numbersValidation', next)
     },
     toggleProduct(num, prod) {
-    this.$emit('toggleProd', num, prod)
-	},
+     this.$emit('toggleProd', num, prod);
+    },
+    addUsNumber(){
+      this.$emit('addUsNumber', this.activeItem);
+    },
     removeNumber(num) {
 	this.api({ action: 'cart/remove_number', data: { phone_number: num.phone_number, id:num.id }} , () => {
     this.$emit('loadData', false,true);

@@ -12,8 +12,6 @@
             </li>
           </ul>
         </div>
-
-
         <div id="cart" :class="cartOpen ? 'open' : 'close'">
           <template v-if="isMobile()">
             <div class="cart" @click="cartOpen = true">
@@ -65,7 +63,7 @@
         </div>
         <div id="form">
           <routerLink to="/" class="clean_link go_back_home" v-html="$store.state.words.go_back_home"></routerLink>
-          <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @addNewNumber="addNewNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
+          <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbers_overseas_info="numbers_overseas_info" :numbersInfo="numbersInfo" :step="step" :numbersUs="numbersUs" :numbers="numbers" @addNewNumber="addNewNumber" @addUsNumber="addUsNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @goToStep="goToStep" :email="form.email ||''" :phone="form.phone_number || ''" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
@@ -107,7 +105,9 @@ export default {
       total: 0,
       form: {},
       numbers: [],
+      numbersUs: [],
       skipPay: false,
+      numbers_overseas_info:[],
       numberOfSteps: 5
     }
   },
@@ -115,6 +115,7 @@ export default {
     
     this.loadData();
     this.getNumbers();
+    this.getUsNumbers();
   },
   computed: {
     words() {
@@ -148,7 +149,7 @@ export default {
         }
 
         if (activeNumber !== false) this.activeNumber = activeNumber;
-
+        this.numbers_overseas_info = data.data.numbers_overseas_info;
         this.form = data.data.order_data;
         this.total = data.data.total_price;
         this.deletedPrice = data.data.total_price_deleted;
@@ -174,6 +175,24 @@ export default {
         else this.numbers = data.data
       })
     },
+
+    getUsNumbers() {
+      this.api({ action: 'cart/get_us_numbers', method: 'post' }, (data) => {
+        if (data.data.error && data.data.error != '')
+          this.activateError(data.data.error)
+        else this.numbersUs = data.data
+      })
+    },
+    addUsNumber(item){
+      this.api({ action: 'cart/add_us_number', data:{ plan:item },method: 'post' }, (data) => {
+        if (data.data.error && data.data.error != '')
+          this.activateError(data.data.error)
+        else {
+          this.getUsNumbers();
+          this.loadData(false,true,item.id);
+        }
+      })
+    },  
 
     removeNumber(num) {
       this.api({ action: 'cart/remove_number', data: { phone_number: num.phone_number, id:num.id } }, ()=>{
@@ -272,7 +291,7 @@ export default {
            return this.$store.commit('setIsLoading', {isLoading: false})
 
           } else {
-            if (data.data.data.exists && !this.otpValidate) {
+            if (data.data.data.exists && !this.otpValidate && data.data.data.account_id) {
               this.api({ action: 'cart/add_cart_data', data: formData })
               this.$store.commit('setIsLoading', {isLoading: false})
               this.$swal

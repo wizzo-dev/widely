@@ -133,6 +133,7 @@ export default {
               }
             else{
                 this.personalInfo = data.data;
+                
               }
             }});
             this.$store.commit('setIsLoading', {isLoading: false})  
@@ -144,7 +145,8 @@ export default {
 					this.saveNumberInfo();
 				}
 			else{
-                    this.$emit('sendOtpForMobility' , this.activeItem.number)
+                this.saveNumberInfo();
+                 this.$emit('sendOtpForMobility' , this.activeItem.number)
 				}
 		},
         saveNumberInfo:function(){
