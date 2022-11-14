@@ -63,7 +63,7 @@ export default {
 				this.activateError(data.data.error);
 				this.$store.commit('setIsLoading', {isLoading: false});
 				}
-				// else document.location = '/activate';
+				else document.location = '/activate';
 					
 			this.$store.commit('setIsLoading', {isLoading: false});
 			})
@@ -73,5 +73,5 @@ export default {
 </script>
 
 <style>
-
+#card_number,#expire{text-align: right;direction: ltr;}
 </style>

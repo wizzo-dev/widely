@@ -75,7 +75,10 @@ export default {
       required: true,
       type: Number,
     },
-
+    allowMobility: {
+      required: true,
+      type: Boolean,
+    },
     numbers: {
       required: true,
       type: Array,
@@ -140,12 +143,11 @@ export default {
 
           },
         submit(){
-			if(this.activeItem.is_new)
+			if(this.activeItem.is_new || this.allowMobility)
 				{
 					this.saveNumberInfo();
 				}
 			else{
-                this.saveNumberInfo();
                  this.$emit('sendOtpForMobility' , this.activeItem.number)
 				}
 		},
@@ -193,6 +195,7 @@ export default {
                           this.activateError(data.data.error);
                       }
                       else{
+                        this.$emit('numberActivated' , form.number);
                           //alert number activeted
                               if(!data.data.esim)
                                   {

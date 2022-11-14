@@ -6,7 +6,7 @@ import store from './store'
 import './styles/app.scss';
 
 
-window.api_url = 'https://primemobile.co.il/api_vue/'
+window.api_url = 'https://widely.co.il/api_vue/'
 const app = createApp({
     extends: App,
   }).use(store).use(router)
