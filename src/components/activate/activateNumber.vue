@@ -13,13 +13,9 @@
         <form class="small_form" @submit.prevent="submit()">
             <div class="invoice_wrapper">	
                 <div :class="'option '+(activeItem.sim == '1' ? 'active' : '')" @click="activeItem.sim = 1">
-                    <div class="small_title bold" v-html="words.i_have_esim"></div>
-                    <div class="radio"></div>
-                </div>
-                <div :class="'option '+(activeItem.sim == '2' ? 'active' : '')" @click="activeItem.sim = 2">
                     <div class="small_title bold" v-html="words.i_have_sim"></div>
                     <div class="radio"></div>
-                    <div class="form-item" style="margin-top: 20px" v-if="activeItem.sim == '2'">
+                    <div class="form-item" style="margin-top: 20px" v-if="activeItem.sim == '1'">
                         <input input-mode="numeric" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  maxlength="6" type="number" id="iccid" v-model="activeItem.iccid" autocomplete="off" required/>
                         <label for="iccid" v-html="words.last_six_dig"></label>
                     </div>
@@ -58,7 +54,7 @@
             </div>
             <div class="small_title bold" v-html="words.chnage_user_name"></div>
             <div class="form-item">
-                <input type="text" id="user_name" v-model="activeItem.user_name" autocomplete="off" />
+                <input type="text" id="user_name" v-model="activeItem.user_name" autocomplete="off" required/>
                 <label for="house_num" v-html="words.my_user_name"></label>
             </div>
             <div class="btn_wrapper" v-if="activeItem.sim != '0'">
@@ -82,9 +78,7 @@ export default {
     numbers: {
       required: true,
       type: Array,
-    },
-
-    
+    }
   },
     data() {
         return {
@@ -130,20 +124,13 @@ export default {
     methods:{
         loadInfo(){
             this.api({ action: 'cart/load_info', data: {}  , onComplete: (data) => {
-            if(data.data.error && data.data.error != "")
-              {
-                this.activateError(data.data.error);
-              }
-            else{
                 this.personalInfo = data.data;
-                
-              }
             }});
-            this.$store.commit('setIsLoading', {isLoading: false})  
 
+            this.$store.commit('setIsLoading', {isLoading: false})  
           },
         submit(){
-			if(this.activeItem.is_new || this.allowMobility)
+			if(this.activeItem.purchase_type == "new" || this.allowMobility)
 				{
 					this.saveNumberInfo();
 				}
@@ -153,10 +140,10 @@ export default {
 		},
         saveNumberInfo:function(){
               let form = {};
-              let isNew = (this.activeItem.is_new ? 'כן' : 'לא');
+              let isNew = (this.activeItem.purchase_type == "new" ? 'כן' : 'לא');
               form.number = this.activeItem.number;
               form.user_name = this.activeItem.user_name;
-              form.is_esim = this.activeItem.sim;
+              form.id = this.activeItem.item_id;
               form.iccid = this.activeItem.iccid;
               this.$store.commit('setIsLoading', {isLoading: true})
 
@@ -177,34 +164,36 @@ export default {
                   this.$store.commit('setIsLoading', {isLoading: false})  
               }
               else{
-                  
-                  if(form.is_esim == 2)form.is_esim = 0;
-                  else form.iccid = '';
-                  
-  
-                  if(form.iccid.length > 0 && form.iccid.length < 6)
+
+                if(form.iccid.length > 0 && form.iccid.length < 6)
                   {
                       this.activateError(this.words.iccid_short);
                       this.activeNumber = false;
                       return false;
                   }
   
-                  this.api({ action: 'api/activate_order', data: form  }, (data) => {
+                  this.api({ action: 'api/prov_create_user', data: form  }, (data) => {
                       if(data.data.error && data.data.error != "")
                       {
                           this.activateError(data.data.error);
                       }
                       else{
-                        this.$emit('numberActivated' , form.number);
-                          //alert number activeted
-                              if(!data.data.esim)
-                                  {
-                                      var text = 'מספר '+form.number+' הופעל בהצלחה!!';
-                                      this.activatePromptExit(text, 'success');
-                                  }
-                              else{
-                                    this.$emit('qrActivated' , data.data.image);
-                              }
+                            this.api({ action: 'api/prov_create_mobile', data: form  }, (data) => {
+                            if(data.data.error && data.data.error != "")
+                            {
+                                this.activateError(data.data.error);
+                            }
+                            else{
+                                this.$emit('numberActivated' , form.number);
+                                //alert number activeted
+                                    if(data.data)
+                                        {
+                                            var text = 'מספר '+form.number+' הופעל בהצלחה!!';
+                                            this.activatePromptExit(text, 'success');
+                                        }
+                            }
+                            this.$store.commit('setIsLoading', {isLoading: false})  
+                        });
                       }
                       this.$store.commit('setIsLoading', {isLoading: false})  
                   });

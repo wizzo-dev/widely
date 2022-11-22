@@ -114,33 +114,14 @@ export default {
 			else {
 				const { data } = this.$refs.signaturePad.saveSignature();
 				const formData = {signature: data}
+				
 				this.$emit('saveData',formData, true);
-				if(this.skipPay) return this.saveDidsToAccount();
-				this.api({ action: 'api/add_account', data: { } }, (data) => {
-					if(data.data.error && data.data.error != "") {
-						this.activateError(data.data.error);
-						return this.$store.commit('setIsLoading', {isLoading: false});
-					}
-					else if(data.data && !this.skipPay) {
-						this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
-					}
-				});
+
+				this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
+
 			}
 			this.$store.commit('setIsLoading', {isLoading: false});
 			
-	},
-	saveDidsToAccount() {
-			const { data } = this.$refs.signaturePad.saveSignature();
-			const formData = {signature: data}
-			this.$emit('saveData',formData, true);
-			this.api({ action: 'api/save_dids_to_account'}, (data)=>{
-			if(data.data.error && data.data.error != "") {
-			this.activateError(data.data.error);
-			this.$store.commit('setIsLoading', {isLoading: false});
-			} else document.location = '/activate';
-
-			this.$emit('saveData',false);
-			})
 	},
 	clearSig() {
       this.$refs.signaturePad.clearSignature();
@@ -149,8 +130,12 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
    #fourth_step{
+	@media(max-width: 600px)
+	{
+		form{max-width: 97vw;overflow: hidden;}	
+	}
 	.pdf_wrapper{max-height: 200px;overflow-y: scroll;}
 	.inner_title{    font-weight: 900;margin: 20px 0;text-decoration: underline;}
 	.terms {

@@ -6,7 +6,7 @@
           <div v-if="isMobile()" :style="'width:' + step * 20 + '%'" id="border"></div>
           <div v-else id="border" :style="'height:' + step * 20 + '%'"></div>
           <ul>
-            <li v-for="num in numberOfSteps" :class="'step ' + (step >= num ? 'active' : '')" :key="num" @click="step = num">
+            <li v-for="num in numberOfSteps" :class="'step ' + (step >= num ? 'active' : '')" :key="num">
               <div class="checkbox"></div>
             </li>
           </ul>
@@ -44,7 +44,6 @@ export default {
       form: {},
       numbers: [],
       personalInfo: {},
-      skipPay: false,
       allowMobility: false,
       numberOfSteps:5,
       qrCode:''
@@ -78,13 +77,8 @@ export default {
     },
     loadData(){
           this.$store.commit('setIsLoading', {isLoading: true})  
-          this.api({ action: 'api/get_open_order_numbers'}, (data) => {
-            if(data.data.error && data.data.error != "")
-            {
-              this.activateError(data.data.error);
-            }
-          else{
-            if(!data.data.length > 0)
+          this.api({ action: 'cart/get_open_order_numbers'}, (data) => {
+            if(!(data.data.length > 0))
               {
                 this.$swal({
                 icon:  'info',
@@ -102,6 +96,7 @@ export default {
               });
               }
             else{
+              console.log(data.data);
               for(let i in data.data)
                 {
                   data.data[i].sim = 1;
@@ -110,7 +105,7 @@ export default {
                 }
                 this.numbers = data.data;
               }
-            }
+            
     
           });
           this.loaded = true;

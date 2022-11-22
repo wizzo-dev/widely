@@ -120,7 +120,8 @@ form table td { padding:2px; }
 .joinUs header,.joinUs footer{display: none}
 .joinUs #content{padding-top: 0}
 
-
+.a, a{font-family: "leon"!important;}
+h2{font-family: "leon"!important;text-decoration: none !important ;}
 /* Page layout */
 body.rtl #page { direction:rtl; text-align:right;  }
 body.ltr #page { direction:ltr; text-align:left; }

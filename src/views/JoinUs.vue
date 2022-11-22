@@ -61,7 +61,7 @@
             
           </div>
         </div>
-        <div id="form">
+        <div id="form" :class="'step_'+step">
           <routerLink to="/" class="clean_link go_back_home" >{{$store.state.words.go_back_home}}</routerLink>
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbers_overseas_info="numbers_overseas_info" :numbersInfo="numbersInfo" :step="step" :numbersUs="numbersUs" :numbers="numbers" @addNewNumber="addNewNumber" @addUsNumber="addUsNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
@@ -97,7 +97,7 @@ export default {
       selectedIds: '',
       otpValidate:false,
       activeNumber: 0,
-      step: 1,
+      step: 5,
       deletedPrice: 0,
       loaded: false,
       cartOpen: !this.isMobile(),
@@ -133,6 +133,8 @@ export default {
       if(this.$route.query.plan && this.$route.query.plan != '')
       {
          plan = this.$route.query.plan;
+
+         //add items to basket by the plan
          this.$router.replace({'query': null});
       }
       this.api({ action: 'cart/get',data:{plan:plan}, method: 'post' }, (data) => {
@@ -282,16 +284,11 @@ export default {
 
       this.api(
         {
-          action: 'api/identification_number_exists',
-          data: { id_card:this.form.id_card },
+          action: 'cart/data_exist',
+          data: { id_card:this.form.id_card ,email:this.form.email },
         },
         (data) => {
-          if (data.data.error && data.data.error != '') {
-            this.activateError(data.data.error)
-           return this.$store.commit('setIsLoading', {isLoading: false})
-
-          } else {
-            if (data.data.data.exists && !this.otpValidate && data.data.data.account_id) {
+            if (data.data) {
               this.api({ action: 'cart/add_cart_data', data: formData })
               this.$store.commit('setIsLoading', {isLoading: false})
               this.$swal
@@ -300,37 +297,28 @@ export default {
                   title: `<h2 class="second_step_title" style="font-size: 24px">${this.words.id_is_exist}</h2>`,
                   showDenyButton: true,
                   showCancelButton: false,
-                  confirmButtonText: 'המשך לזיהוי',
+                  confirmButtonText: 'אזור אישי',
                   denyButtonText: 'שימוש במספר זהות אחר',
                   customClass:{container: 'second_step_swal'}
                 })
                 .then((result) => {
                   if (result.isConfirmed) {
-                    this.step = 7
-                    this.skipPay = true
+                    document.location  = '/';
                   } else if (result.isDenied) {
                     this.step = 2
                   }
                 })
-            } else if (data.data.data.exists && this.otpValidate) {
-
-              this.step = 4
-              this.$store.commit('setIsLoading', {isLoading: false})
-            } else {
-
-              this.api(
-                { action: 'cart/add_cart_data', data: formData },
-                () => {
-                  if (!dontMoveStep) {
+            }
+            else {
+              this.api({ action: 'cart/add_cart_data', data: formData },() => {
                     this.step++
                     window.scrollTo(0, 0)
                     this.$store.commit('setIsLoading', {isLoading: false})
-                  }
                 }
               )
             }
           }
-        }
+        
       )
     },
     parseNumbers(items) {
@@ -353,3 +341,9 @@ export default {
   },
 }
 </script>
+<style scoped lang="scss">
+@media(max-width: 600px)
+{
+  .step_4{padding-top: 25px;}	
+}
+</style>
