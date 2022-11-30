@@ -16,7 +16,7 @@
                     <div class="small_title bold" v-html="words.i_have_sim"></div>
                     <div class="radio"></div>
                     <div class="form-item" style="margin-top: 20px" v-if="activeItem.sim == '1'">
-                        <input input-mode="numeric" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  maxlength="6" type="number" id="iccid" v-model="activeItem.iccid" autocomplete="off" required/>
+                        <input input-mode="numeric" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  maxlength="6" type="text" id="iccid" v-model="activeItem.iccid" autocomplete="off" required/>
                         <label for="iccid" v-html="words.last_six_dig"></label>
                     </div>
                 </div>
@@ -178,19 +178,22 @@ export default {
                           this.activateError(data.data.error);
                       }
                       else{
+                            form.domain_user_id = data.data.data.id;
                             this.api({ action: 'api/prov_create_mobile', data: form  }, (data) => {
                             if(data.data.error && data.data.error != "")
                             {
                                 this.activateError(data.data.error);
                             }
                             else{
-                                this.$emit('numberActivated' , form.number);
-                                //alert number activeted
-                                    if(data.data)
-                                        {
-                                            var text = 'מספר '+form.number+' הופעל בהצלחה!!';
-                                            this.activatePromptExit(text, 'success');
-                                        }
+
+                                console.log(data);
+                                // this.$emit('numberActivated' , form.number);
+                                // //alert number activeted
+                                //     if(data.data)
+                                //         {
+                                //             var text = 'מספר '+form.number+' הופעל בהצלחה!!';
+                                //             this.activatePromptExit(text, 'success');
+                                //         }
                             }
                             this.$store.commit('setIsLoading', {isLoading: false})  
                         });

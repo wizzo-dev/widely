@@ -115,9 +115,8 @@ export default {
 				const { data } = this.$refs.signaturePad.saveSignature();
 				const formData = {signature: data}
 				
-				this.$emit('saveData',formData, true);
+				this.$emit('saveData',formData);
 
-				this.$emit('goToStep', this.step + 1);window.scrollTo(0,0); 
 
 			}
 			this.$store.commit('setIsLoading', {isLoading: false});

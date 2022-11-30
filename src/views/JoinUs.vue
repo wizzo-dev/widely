@@ -63,7 +63,7 @@
         </div>
         <div id="form" :class="'step_'+step">
           <routerLink to="/" class="clean_link go_back_home" >{{$store.state.words.go_back_home}}</routerLink>
-          <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbers_overseas_info="numbers_overseas_info" :numbersInfo="numbersInfo" :step="step" :numbersUs="numbersUs" :numbers="numbers" @addNewNumber="addNewNumber" @addUsNumber="addUsNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
+          <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbers_overseas_info="numbers_overseas_info" :numbersInfo="numbersInfo" :step="step"  :numbers="numbers" @addNewNumber="addNewNumber" @addUsNumber="addUsNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <FourthStep v-if="step === 4" :skipPay="skipPay" @goToStep="goToStep" :email="form.email ||''" :phone="form.phone_number || ''" @returnStep="step--" :numbersInfo="numbersInfo" :step="step" :numbers="numbers" @saveData="saveCartData" />
@@ -97,7 +97,7 @@ export default {
       selectedIds: '',
       otpValidate:false,
       activeNumber: 0,
-      step: 5,
+      step: 1,
       deletedPrice: 0,
       loaded: false,
       cartOpen: !this.isMobile(),
@@ -115,7 +115,7 @@ export default {
     
     this.loadData();
     this.getNumbers();
-    this.getUsNumbers();
+    // this.getUsNumbers();
   },
   computed: {
     words() {
@@ -190,7 +190,7 @@ export default {
         if (data.data.error && data.data.error != '')
           this.activateError(data.data.error)
         else {
-          this.getUsNumbers();
+          // this.getUsNumbers();
           this.loadData(false,true,item.id);
         }
       })

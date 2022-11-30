@@ -93,7 +93,7 @@
               <div class="sub_title semi_bold" v-html="prod.description"></div>
             </div>
           </div>
-          <template  v-if="numbersUs.length > 0 && numbers_overseas_info">
+          <template  v-if="numbers_overseas_info">
             <div class="prod" v-for="(number_oversea,n) in numbers_overseas_info" :key="n">
               <div class="checkbox">
                 <label class="container_check">
