@@ -5,7 +5,9 @@ $mobileWidth: 750px;
 
 #join_us {
     
-    &{padding: 0;display: flex;position: relative;height: 900px;}
+    &{padding: 0;display: flex;position: relative;min-height: 100vh;justify-content: center;}
+	@media (max-width: 600px) {}
+	@media (min-width: 600px) {padding: 50px 0;}
     
 	.checkbox_approve{
 		.select2{display: none!important}
@@ -14,7 +16,7 @@ $mobileWidth: 750px;
 	}
 	.go_back_home{display: block;margin-bottom: 40px}
 	#back_image{
-		&{background-image: url(../assets/images/back_plan.png);background-size: cover;position: absolute;width: 80%;top: 0;bottom: 0;left: 0;}
+		&{background-image: url(@/assets/images/back-img.jpg);background-size: cover;position: absolute;inset: 0;}
 		@media (max-width: 600px) {top: -110px;}
 		@media (min-width: 600px) {}
 		#white_logo{background-image: url(../assets/images/logo.png);background-size: contain;position: absolute;width: 200px;top: 10%;left: 10%;height: 100px;background-repeat: no-repeat}
@@ -22,7 +24,7 @@ $mobileWidth: 750px;
 	#cart{box-shadow: 0 2px 30px 0 rgba(0 ,0, 0, 0.45);padding:20px 35px 40px;position: absolute;left: -150px;transform: translate(-90%, 0%);z-index: 9999;background: #fff;border-radius: 30px;transition: all 0.4s ease;min-width: 330px;min-height: 300px;top: 40%;
 		.cart_title{font-size: 20px}
 		.options{justify-content: space-between;    margin-bottom: 0;}
-		.toggle_product{    position: absolute;right: 0;}
+		.toggle_product{position: absolute;right: 0;}
 		.pic{width: 80px;height: 80px;background-size: cover;background-position: center;}
 		.cart{font-size: 27px;position: absolute;left: 10px;top: 10px}
 		.close{position: absolute;right: 10px;transition: all 0.4s ease in out;top: 10px;}
@@ -54,7 +56,10 @@ $mobileWidth: 750px;
 	.wrapper{
 		&{display: flex;justify-content: center;flex-wrap: wrap;column-gap: 40px;    flex-basis: 50%;}
 		.image{background-image:url('../assets/images/back_plan.png');background-size: cover;height: 600px;width: 100%;flex:1}
-		.forms{position: relative;justify-content: center;/*box-shadow: 0 2px 30px 0 rgb(0 0 0 / 45%)*/;z-index: 1;;background: #fff;;padding: 70px 50px;height:100%;width: 100%;
+		.forms{
+			&{border-radius: 10px; position: relative;justify-content: center;/*box-shadow: 0 2px 30px 0 rgb(0 0 0 / 45%)*/;z-index: 1;;background: #fff;;padding: 30px;width: 100%;}
+			@media (max-width: 600px) {height: 100%;}
+			@media (min-width: 600px) {height:fit-content;padding-bottom: 100px;}
 			.form{width: 80%;margin: 0 auto; text-align: center;position: relative}
 			.small_form{width: 500px;max-width: 90%}
 			.form{

@@ -3,7 +3,8 @@
 
     <div class="wrapper">
       <div class="forms">
-        <div class="steps" v-if="step > 0">
+        <!-- step dots -->
+        <!-- <div class="steps" v-if="step > 0">
           <div v-if="isMobile()" :style="'width:' + step * 20 + '%'" id="border"></div>
           <div v-else id="border" :style="'height:' + step * 20 + '%'"></div>
           <ul>
@@ -11,7 +12,7 @@
               <div class="checkbox"></div>
             </li>
           </ul>
-        </div>
+        </div> -->
         <div id="cart" :class="cartOpen ? 'open' : 'close'">
           <template v-if="isMobile()">
             <div class="cart" @click="cartOpen = true">
@@ -74,7 +75,7 @@
       </div>
     </div>
 
-    <div id="back_image" :style="`background-image:url(${bgImg})`">
+    <div id="back_image">
       <div id="white_logo"></div>
     </div>
   </div>
