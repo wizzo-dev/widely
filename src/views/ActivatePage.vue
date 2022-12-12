@@ -2,7 +2,8 @@
   <div id="join_us" v-if="loaded">
     <div class="wrapper">
       <div class="forms">
-        <div class="steps" v-if="step > 0">
+        <!-- step dots -->
+        <!-- <div class="steps" v-if="step > 0">
           <div v-if="isMobile()" :style="'width:' + step * 20 + '%'" id="border"></div>
           <div v-else id="border" :style="'height:' + step * 20 + '%'"></div>
           <ul>
@@ -10,7 +11,7 @@
               <div class="checkbox"></div>
             </li>
           </ul>
-        </div>
+        </div> -->
         <div id="form">
           <activateNumber v-if="step === 1" :step="step" :numbers="numbers" :personalInfo="personalInfo" @numberActivated="finishNumber" @qrActivated="qrActivated" @sendOtpForMobility="sendOtpForMobility" :allowMobility="allowMobility"/>
           <sendOtp v-if="step === 2" :phoneNumber="phoneNumber" @success="successOtpSend"/>
@@ -19,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div id="back_image" :style="'background-image:url(https://primemobile.co.il/themes/WID/images/step_' + (step <= 5 ? step : 2) + '.jpg)'">
+    <div id="back_image">
       <div id="white_logo"></div>
     </div>
   </div>

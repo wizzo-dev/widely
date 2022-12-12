@@ -186,7 +186,6 @@ export default {
                             }
                             else{
 
-                                console.log(data);
                                 // this.$emit('numberActivated' , form.number);
                                 // //alert number activeted
                                 //     if(data.data)
@@ -194,8 +193,27 @@ export default {
                                 //             var text = 'מספר '+form.number+' הופעל בהצלחה!!';
                                 //             this.activatePromptExit(text, 'success');
                                 //         }
+
+                                let note = "";
+                                for (let i in data.data.data.notes)
+                                {
+                                    note +=' '+data.data.data.notes[i];
+                                }
+                                this.$store.commit('setIsLoading', {isLoading: false});
+
+                                this.$swal({
+                                icon: 'success',
+                                text: note,
+                                showCloseButton: false,
+                                showCancelButton: false, 
+                                allowOutsideClick: false,
+                                showConfirmButton: true,
+                                confirmButtonText: 'אוקיי',
+                                }).then(() => {
+                                    this.$router.go();
+                                });
                             }
-                            this.$store.commit('setIsLoading', {isLoading: false})  
+                            
                         });
                       }
                       this.$store.commit('setIsLoading', {isLoading: false})  
