@@ -1,8 +1,8 @@
 <template>
   <div id="join_us" v-if="loaded">
-
     <div class="wrapper">
       <div class="forms">
+      <div id="white_logo_mobile"></div>
         <!-- step dots -->
         <!-- <div class="steps" v-if="step > 0">
           <div v-if="isMobile()" :style="'width:' + step * 20 + '%'" id="border"></div>
@@ -14,7 +14,7 @@
           </ul>
         </div> -->
         <div id="cart" :class="cartOpen ? 'open' : 'close'">
-          <template v-if="isMobile()">
+          <template v-if="isMobile() || isCartMobile()">
             <div class="cart" @click="cartOpen = true">
               <font-awesome-icon icon="fa fa-shopping-cart" />
 
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <div id="back_image">
+    <div v-if="!isMobile()" id="back_image">
       <div id="white_logo"></div>
     </div>
   </div>

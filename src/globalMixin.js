@@ -201,7 +201,7 @@ const globalMixin = {
        },
   
   
-      isMobile: function(){ 
+      isMobile(){ 
         const toMatch = [
           /Android/i,
           /webOS/i,
@@ -217,6 +217,11 @@ const globalMixin = {
       });
       
       },
+
+      isCartMobile() {
+        console.log( window.innerWidth < 1100 && window.innerWidth > 600);
+        return window.innerWidth < 1100 && window.innerWidth > 600;
+      }
   
      }
     }

@@ -362,7 +362,7 @@ body.ltr{
 	#app .wrapper{flex-basis: 65%}
 }
 @media(max-width:1100px) and (min-width:600px){
-	#app #cart{left: unset;top: 70%}
+	#app #cart{left: 0;top: 0;transform: translate(10px, 10px)}
 	#app #back_image #white_logo{left: 20px}
 	#app .wrapper{flex-basis: 70%}
 	#app .wrapper .forms .form .number_wrapper .prods_wrapper{flex-direction: column;gap:10px}
