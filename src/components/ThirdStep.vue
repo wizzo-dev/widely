@@ -38,9 +38,9 @@ export default {
     return {
 		form:{},
 		cities: ["vach"],
-		selectedCity: {},
+		selectedCity: '',
 		openStreet: false,
-		selectedStreet:{},
+		selectedStreet:'',
 		isLoading: false,
 		settingsCity: {
 			language: {
@@ -119,7 +119,12 @@ export default {
 	},
    },
    mounted() {
-	if (this.parentForm && Object.entries(this.parentForm).length) this.form = {...this.parentForm}
+	if (this.parentForm && Object.entries(this.parentForm).length) {
+
+		this.form = {...this.parentForm}
+		this.selectedCity = this.parentForm.city;
+		this.selectedStreet = this.parentForm.street;
+	}
   },
   computed: {
     words() {

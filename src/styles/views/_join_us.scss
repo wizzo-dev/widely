@@ -5,9 +5,10 @@ $mobileWidth: 750px;
 
 #join_us {
     
-    &{padding: 0;display: flex;position: relative;min-height: 100vh;justify-content: center;}
-	@media (max-width: 600px) {}
+    &{padding: 0;display: flex;position: relative;min-height: 100vh;}
 	@media (min-width: 600px) {padding: 50px 0;}
+	@media (min-width: 1600px) {justify-content: center;}
+	@media (max-width: 1600px) and (min-width: 600px) {padding: 50px 20px;}
     
 	.checkbox_approve{
 		.select2{display: none!important}
@@ -21,7 +22,8 @@ $mobileWidth: 750px;
 		@media (min-width: 600px) {}
 		#white_logo{background-image: url(../assets/images/logo.png);background-size: contain;position: absolute;width: 200px;top: 10%;left: 10%;height: 100px;background-repeat: no-repeat}
 	}
-	#cart{box-shadow: 0 2px 30px 0 rgba(0 ,0, 0, 0.45);padding:20px 35px 40px;position: absolute;left: -150px;transform: translate(-90%, 0%);z-index: 9999;background: #fff;border-radius: 30px;transition: all 0.4s ease;min-width: 330px;min-height: 300px;top: 40%;
+	#cart{
+		&{box-shadow: 0 2px 30px 0 rgba(0 ,0, 0, 0.45);padding:20px 35px 40px;position: absolute;left: -100px;transform: translate(-90%, 0%);z-index: 9999;background: #fff;border-radius: 30px;transition: all 0.4s ease;min-width: 330px;min-height: 300px;top: 40%;}
 		.cart_title{font-size: 20px}
 		.options{justify-content: space-between;    margin-bottom: 0;}
 		.toggle_product{position: absolute;right: 0;}
@@ -73,7 +75,11 @@ $mobileWidth: 750px;
 						.item_page{color:#fff;height: 25px;width: 25px;border-radius: 100%;text-align: center;font-weight: 600;line-height: 1;font-size: 14px;background: rgba(0, 0, 0, 0.2);}
 						.item_page.active{background: $mainColor}
 					}
-					.btn{background: $mainColor;color: #fff;border: none;padding: 10px 30px;border-radius: 30px;line-height: 1;font-size: 18px;font-family: 'leon';}
+					.btn{
+						&{background: $mainColor;color: #fff;border: none;padding: 10px 30px;border-radius: 30px;line-height: 1;font-size: 18px;font-family: 'leon';}
+						@media (max-width: 600px) {margin: 0 5px;padding: 10px 20px;}
+						@media (min-width: 600px) {}
+					}
 					.dashed{text-align: center;border: 2px dashed rgba(0, 0, 0, 0.2);border-radius: 10px;font-weight: 900;color: rgba(0, 0, 0, 0.2);cursor: pointer;background: transparent}
 				}
 				.number_wrapper.alert{border: 2px solid red}
@@ -113,8 +119,8 @@ $mobileWidth: 750px;
 			.options{display: flex;column-gap: 20px;justify-content: right;margin-bottom: 20px;
 				.tab{font-size: 15px;border-bottom: 2px solid transparent;padding-bottom: 3px; font-weight: 700;}
 				.tab.active{border-bottom: 2px solid $mainColor; font-weight: 700;}
-				.number{border-radius: 7.5px;box-shadow: 0 2.5px 20px -5px #6fda8c;background-color: #fff;font-weight: 600;font-size: 15px;padding: 5px 10px;border: 1px solid transparent}
-				.number.active{border-color: $mainColor}
+				.number{border-radius: 7.5px;box-shadow: 0 2.5px 20px -5px #6fda8c;background-color: #fff;font-weight: 600;font-size: 15px;padding: 5px 10px;border: 1px solid transparent;transition: .2s all;}
+				.number.active{border-color: $mainColor; background-color: $mainColor;color: #fff;}
 				.chose_number{color:$mainColor;text-decoration: underline;font-weight: 600;    line-height: 1;}
 			}
 		}

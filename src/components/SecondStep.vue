@@ -9,6 +9,10 @@
 			oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="9" id="id_card" v-model="form.id_card" autocomplete="off" required/>
 			<label for="id_card" v-html="words.busines_id"></label>
 		</div>
+		<div class="form-item">
+			<input type="text" id="company_name" autocomplete="off" v-model="form.company_name" />
+			<label for="company_name"  v-html="words.company_name"></label>
+		</div>
 		<div class="small_title" v-html="words.whats_your_name"></div>
 		<div class="options">
 			<div class="form-item">
@@ -41,12 +45,13 @@ export default {
 	data() {
 		return {
 		form: {
-		id_card: '',
-		first_name: '',
-		last_name: '',
-		email: '',
-		phone_number: '',
-		}
+			id_card: '',
+			first_name: '',
+			last_name: '',
+			email: '',
+			phone_number: '',
+			company_name: ''
+			}
 		}
 	},
 props: {

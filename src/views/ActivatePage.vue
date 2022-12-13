@@ -13,6 +13,8 @@
           </ul>
         </div> -->
         <div id="form">
+          <a href="https://widely.co.il/" v-if="step === 1" class="go_back" >{{words.go_back_home}}</a>
+          <button v-else class="go_back clean_btn" v-html="words.go_back" @click="step--"></button>
           <activateNumber v-if="step === 1" :step="step" :numbers="numbers" :personalInfo="personalInfo" @numberActivated="finishNumber" @qrActivated="qrActivated" @sendOtpForMobility="sendOtpForMobility" :allowMobility="allowMobility"/>
           <sendOtp v-if="step === 2" :phoneNumber="phoneNumber" @success="successOtpSend"/>
           <validateOtp v-if="step === 3" :phoneNumber="phoneNumber" @success="validateOtp"/>
@@ -124,3 +126,11 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+  #form{
+    button.go_back{background-color: transparent;font-size: 22px;font-weight: 600;cursor: pointer;}
+
+    h2.title{margin: 10px;}
+  }
+</style>

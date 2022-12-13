@@ -4,14 +4,14 @@
 			<h2 class="title" v-html="words.where_to_send_invoice"></h2>
 			<form class="" @submit.prevent="openUser()">
 				<div class="invoice_wrapper">
-					<div :class="'option '+(form.invoice == '0' ? 'active' : '')" @click="form.invoice = 0">
+					<div :class="'option '+(form.invoice_email ? 'active' : '')" @click="form.invoice_email = !form.invoice_email">
 						<div class="small_title bold" v-html="words.email"></div>
 						<div class="radio"></div>
 						<div class="value semi_bold">
 							{{ email }} <a class="change_number semi_bold" @click.stop="$emit('goToStep', 2)" v-html="words.change_number"></a>
 						</div>
 					</div>
-					<div :class="'option '+(form.invoice == '1' ? 'active' : '')" @click="form.invoice = 1">
+					<div :class="'option '+(form.invoice_sms ? 'active' : '')" @click="form.invoice_sms = !form.invoice_sms">
 						<div class="small_title bold" v-html="words.send_sms"></div>
 						<div class="radio"></div>
 						<div class="value semi_bold">
@@ -46,7 +46,8 @@ export default {
   data() {
     return {
 		form:{
-			invoice: 0 // invoice sending method, 0 = mail, 1 = SMS
+			invoice_sms: false, // invoice sending method, 0 = mail, 1 = SMS,
+			invoice_email: false
 		},
 		isLoading: false,
 		terms: '',
@@ -113,7 +114,8 @@ export default {
 			if (this.$refs.signaturePad.isEmpty()) this.activateError(this.words.signature_requierd)
 			else {
 				const { data } = this.$refs.signaturePad.saveSignature();
-				const formData = {signature: data}
+				const {invoice_sms, invoice_email} = this.form;				
+				const formData = {signature: data, invoice_sms: +invoice_sms, invoice_email: +invoice_email}
 				
 				this.$emit('saveData',formData);
 
@@ -135,10 +137,17 @@ export default {
 	{
 		form{max-width: 97vw;overflow: hidden;}	
 	}
-	.pdf_wrapper{max-height: 200px;overflow-y: scroll;}
+	.pdf_wrapper{
+		&{max-height: 200px;overflow-y: scroll;}
+		@media (max-width: 600px) {margin: 0 10px;}
+		@media (min-width: 600px) {}
+	}
 	.inner_title{    font-weight: 900;margin: 20px 0;text-decoration: underline;}
 	.terms {
 		&{display: flex;flex-direction: column;justify-content: center;text-align: initial;}
+		@media (max-width: 600px) {align-items: center;}
+		@media (min-width: 600px) {}
+
 		.sig_wrapper{
 			&{margin-bottom: 20px;}
 			.btn_clear_sig{font-size: 16px;text-decoration: underline;}

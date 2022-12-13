@@ -167,11 +167,7 @@ export default {
     numbers_overseas_info: {
       required: true,
       type: Array,
-    },
-    numbersUs: {
-      required: true,
-      type: Array,
-    },
+    }
   },
   computed: {
     words() {

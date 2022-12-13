@@ -1,5 +1,5 @@
 <template>
-  <div id="join_us">
+  <div id="join_us" v-if="loaded">
 
     <div class="wrapper">
       <div class="forms">
@@ -63,7 +63,8 @@
           </div>
         </div>
         <div id="form" :class="'step_'+step">
-          <routerLink to="/" class="clean_link go_back_home" >{{$store.state.words.go_back_home}}</routerLink>
+          <a href="https://widely.co.il/" class="clean_link go_back_home" >{{$store.state.words.go_back_home}}</a>
+          <h2 v-if="planData" class="plan_name" v-html="planData.name"></h2>
           <FirstStep v-if="step === 1" @loadData="loadData" @returnStep="step--" @setActiveNumber="setActiveNumber" @toggleProd="toggleProd" :numbers_overseas_info="numbers_overseas_info" :numbersInfo="numbersInfo" :step="step"  :numbers="numbers" @addNewNumber="addNewNumber" @addUsNumber="addUsNumber" @getNumbers="getNumbers" @numbersValidation="numbersValidation" :activeNumber="+activeNumber"/>
           <SecondStep v-if="step === 2" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
           <ThirdStep v-if="step === 3" @returnStep="step--" :numbersInfo="numbersInfo" :parentForm="form" :step="step" :numbers="numbers" @saveData="saveCartData" />
@@ -109,22 +110,22 @@ export default {
       numbersUs: [],
       skipPay: false,
       numbers_overseas_info:[],
-      numberOfSteps: 5
+      numberOfSteps: 5,
+      planData: null
     }
   },
   mounted() {
     
     this.loadData();
     this.getNumbers();
-    // this.getUsNumbers();
   },
   computed: {
     words() {
       return this.$store.state.words;
     },
     bgImg() {
-      if (this.isMobile()) return 'https://primemobile.co.il/themes/WID/images/step_2.jpg';
-      else return 'https://primemobile.co.il/themes/WID/images/step_' + (this.step <= 5 ? this.step : 2) + '.jpg'
+      if (this.isMobile()) return 'https://widely.co.il/themes/WID/images/step_2.jpg';
+      else return 'https://widely.co.il/themes/WID/images/step_' + (this.step <= 5 ? this.step : 2) + '.jpg'
     }
   },
   methods: {
@@ -142,8 +143,9 @@ export default {
         if (this.loaded && !dontAdd) {
           this.numbersValidation();
         }
-        if (data.data.items === undefined || data.data.items.length == 0) this.addNewNumber();
+        if(!this.planData && data.data.plan_data) this.planData = data.data.plan_data;
         
+        if(data.data.items === undefined || data.data.items.length == 0) this.addNewNumber();
         else {
           let numbers = this.parseNumbers(data.data.items);
           this.numbersInfo = numbers;
@@ -156,7 +158,9 @@ export default {
         this.form = data.data.order_data;
         this.total = data.data.total_price;
         this.deletedPrice = data.data.total_price_deleted;
-      })
+       
+        this.loaded = true;
+      });
     },
     goToStep(step){
       this.step = step > 0 ? step : 1;
@@ -179,19 +183,12 @@ export default {
       })
     },
 
-    getUsNumbers() {
-      this.api({ action: 'cart/get_us_numbers', method: 'post' }, (data) => {
-        if (data.data.error && data.data.error != '')
-          this.activateError(data.data.error)
-        else this.numbersUs = data.data
-      })
-    },
+   
     addUsNumber(item){
       this.api({ action: 'cart/add_us_number', data:{ plan:item },method: 'post' }, (data) => {
         if (data.data.error && data.data.error != '')
           this.activateError(data.data.error)
         else {
-          // this.getUsNumbers();
           this.loadData(false,true,item.id);
         }
       })
@@ -343,8 +340,9 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@media(max-width: 600px)
-{
+@media(max-width: 600px) {
   .step_4{padding-top: 25px;}	
 }
+
+h2.plan_name{text-align: center;margin-bottom: 15px;font-weight: bolder;}
 </style>
